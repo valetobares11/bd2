@@ -1,0 +1,5 @@
+driver=com.mysql.cj.jdbc.Driver
+url=jdbc:mysql://localhost/bd2
+username=root
+password=xxxxxx
+name_database=bd2
