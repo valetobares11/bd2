@@ -47,6 +47,11 @@ public class Column {
 	}
 
 
-	
+	@Override
+	public String toString() {
+		String r = "  Columna: " + name+ "   Type: "+  type;
+		
+		return r;
+	}
 	
 }

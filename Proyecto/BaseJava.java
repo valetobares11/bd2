@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -16,6 +17,12 @@ public class BaseJava {
 	private String username;
 	private String password;
 	private String name_bd;
+	private static final String INITIALIZATION_STRING  = "";
+	private static final String DRIVER  = "driver";
+	private static final String URL  = "url";
+	private static final String USERNAME = "username";
+	private static final String PASSWORD = "password";
+	private static final String NOMBRE_DATABASE = "name_database";
 /**
 *Asigna los atributos de nuestra base de datos a los atributos de la clase,
 *Estos datos los encuentra en un archivo llamado "database.properties"
@@ -31,11 +38,11 @@ public class BaseJava {
 		catch(IOException e){
 			throw new IOException(e);
 		}
-		driver = dbProps.getProperty("driver");
-		url = dbProps.getProperty("url");
-		username = dbProps.getProperty("username");
-		password = dbProps.getProperty("password");
-		name_bd = dbProps.getProperty("name_database");
+		driver = dbProps.getProperty(DRIVER);
+		url = dbProps.getProperty(URL);
+		username = dbProps.getProperty(USERNAME);
+		password = dbProps.getProperty(PASSWORD);
+		name_bd = dbProps.getProperty(NOMBRE_DATABASE);
 	}
 
 /**
@@ -45,7 +52,8 @@ public class BaseJava {
 *@return La conexion con la base de datos
 */
   public Connection setUpConnection() throws SQLException,ClassNotFoundException{
-  	try{
+  	
+	  try{
   			// Load database driver if not already loaded.
    			Class.forName(this.driver);
   			Connection connection =	DriverManager.getConnection(this.url,this.username,this.password);
@@ -63,64 +71,82 @@ public class BaseJava {
       }
 	
   }
-
+  /**
+  *Crea la Estrutura de la Base de Datos
+  *@throws SQLException si nuestra consulta es erronea o falla alguna funcion de metadata
+  *@throws Connection para capturar los datos de nuestra bd
+  *@return La base de datos
+  */
   public Database crearBaseDatos(Connection connection) throws SQLException {
 	  DatabaseMetaData metaData = connection.getMetaData();
-		 String[] tipo = {"TABLE"};
 	  Database database = new Database(this.name_bd);
-	  ResultSet resultSetTables = metaData.getTables(null,this.name_bd, null, tipo);
+	  ResultSet resultSetTables = metaData.getTables(this.name_bd,null, null,  new String[]{"TABLE"});
+	  String query = INITIALIZATION_STRING;
+	  String nombreTable = INITIALIZATION_STRING;
+	  String colummName = INITIALIZATION_STRING;
+	  String colummType = INITIALIZATION_STRING;
 	  while(resultSetTables.next()) {
-		  String nombreTable =resultSetTables.getString(3);
+		  nombreTable =resultSetTables.getString(3);
 		  Table table = new Table();
 		  table.setName(nombreTable);
-		  ResultSet rs = metaData.getColumns(null,null, nombreTable, null);
-		  String colummName ="";
-		  String colummType ="";
-		  while (rs.next()) {
+		  ResultSet result_columns_table = metaData.getColumns(null,null, nombreTable, null);
+		  while (result_columns_table.next()) {
 	    	 Column columna = new Column();
-             colummName = rs.getString("COLUMN_NAME");
-             colummType = rs.getString("COLUMN_TYPE");
+             colummName = result_columns_table.getString("COLUMN_NAME");
+             colummType = result_columns_table.getString("TYPE_NAME");
              columna.setName(colummName);
-             columna.setName(colummType);
+             columna.setType(colummType);
              table.addColumn(columna);
 		  }
 		 
-		  /*select f.constraint_name,c.constraint_type,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE f 
-		   * inner join (select constraint_name,constraint_type from information_schema.table_constraints) as c on c.constraint_name = f.constraint_name 
-		   * where f.TABLE_NAME = 'ITEM_FACTURA'*/
-		  String query = " select constraint_name,constraint_type from information_schema.table_constraints where table_name = '"+nombreTable;   
-		  ResultSet res = connection.createStatement().executeQuery(query);
-		  while(res.next()){
+		  query= "select CONSTRAINT_NAME,CONSTRAINT_TYPE,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE NATURAL JOIN "
+		  		+ "information_schema.table_constraints where table_name = '"+nombreTable+"'";  
+		  ResultSet result_key_table = connection.createStatement().executeQuery(query);
+		  while(result_key_table.next()){
 			 Key key = new Key();
-			 key.setKeyName(res.getString("constraint_name"));
-			 if (res.getString("constraint_type").equals("FOREIGN KEY")) {
+			 key.setKeyName(result_key_table.getString("CONSTRAINT_NAME"));
+			 if (result_key_table.getString("CONSTRAINT_TYPE").equals("FOREIGN KEY")) {
 				 key.setKeyType(2);
-				 query = " select COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from"
-				 		+ " information_schema.KEY_COLUMN_USAGE where CONSTRAINT_NAME = '"+key.getKeyName()+"' AND table_name = '"+nombreTable;
-				 ResultSet res2 = connection.createStatement().executeQuery(query);
-				 key.setColumnAssoc(res2.getString("COLUMN_NAME"));
-				 key.referenceTo(res2.getString("REFERENCED_COLUMN_NAME "), res2.getString("REFERENCED_TABLE_NAME"));
+				 key.setColumnAssoc(result_key_table.getString("COLUMN_NAME"));
+				 key.referenceTo(result_key_table.getString("REFERENCED_COLUMN_NAME"), result_key_table.getString("REFERENCED_TABLE_NAME"));
 	    		 	 
 	    	 }
-	    	 if (res.getString("constraint_type").equals("PRIMARY KEY")) {
-	    		key.setKeyType(1);
-	    		 query = " select COLUMN_NAME from  information_schema.KEY_COLUMN_USAGE where CONSTRAINT_NAME = '"+key.getKeyName()+"' AND table_name = '"+nombreTable;
-				 ResultSet res2 = connection.createStatement().executeQuery(query);
-				 key.setColumnAssoc(res2.getString("COLUMN_NAME"));
+	    	 if (result_key_table.getString("CONSTRAINT_TYPE").equals("PRIMARY KEY")) {
+	    		 key.setKeyType(1);
+				 key.setColumnAssoc(result_key_table.getString("COLUMN_NAME"));
 	    	 }
-	    	 if (res.getString("constraint_type").equals("UNIQUE KEY")) {
+	    	 if (result_key_table.getString("CONSTRAINT_TYPE").equals("UNIQUE KEY")) {
 		    	 key.setKeyType(3); 
-		    	 query = " select COLUMN_NAME from  information_schema.KEY_COLUMN_USAGE where CONSTRAINT_NAME = '"+key.getKeyName()+"' AND table_name = '"+nombreTable;
-				 ResultSet res2 = connection.createStatement().executeQuery(query);
-				 key.setColumnAssoc(res2.getString("COLUMN_NAME"));
+		    	 key.setColumnAssoc(result_key_table.getString("COLUMN_NAME"));
 	    	 }	
 		  table.addKey(key);
 		  }
-		  //FALTAN LOS TRIGGERS Y PROCEDURES
-		  //********************************
+		 
+		  query = "SELECT * FROM information_schema.TRIGGERS WHERE trigger_schema = '"+this.name_bd+"' "
+		  		+ "AND EVENT_OBJECT_TABLE = '"+nombreTable+"'";
+		  ResultSet resutl_trigger_table = connection.createStatement().executeQuery(query);
+		  while(resutl_trigger_table.next()){
+			  Trigger tigger = new Trigger(resutl_trigger_table.getString("TRIGGER_NAME"),
+					  resutl_trigger_table.getString("ACTION_TIMING"),resutl_trigger_table.getString("EVENT_MANIPULATION"));
+			  table.addTrigger(tigger);
+		  }
+		  
 		  database.addTable(table);
 	  }
 	  
+	  ResultSet resultSetProcedure = metaData.getProcedures(connection.getCatalog(), null, null);
+		Procedure procedure;
+		while (resultSetProcedure.next()) {
+			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"),resultSetProcedure.getString("PROCEDURE_TYPE"));
+			ResultSet pp = metaData.getProcedureColumns(connection.getCatalog(), connection.getSchema(), procedure.getName(), null);
+			List<String[]> list_parameters = procedure.getParameters();
+			while (pp.next()) {
+				list_parameters.add(new String[]{pp.getString("COLUMN_NAME"),pp.getString("COLUMN_TYPE")});
+			}
+			procedure.setParameters(list_parameters);
+			database.addProcedure(procedure);
+		}
+		
 	 return database; 
   }
 	 

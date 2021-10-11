@@ -55,7 +55,7 @@ public class Trigger {
 	
 	@Override
 	public String toString() {
-		return "Trigger [name=" + name + ", shot=" + shot + "]";
+		return "Trigger [name=" + name + ", shot=" + shot + ", action= "+action+"]";
 	}
 	
 }

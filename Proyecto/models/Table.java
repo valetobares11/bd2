@@ -95,7 +95,10 @@ public class Table {
 			r = r + "\n    " + column.toString();
 		}
 		for (Key key : keys) {
-			r = r + "\n     k:"+key;
+			r = r + "\n     k:"+key.toString();
+		}
+		for (Trigger trigger : triggers) {
+			r = r + "\n     T:"+trigger.toString();
 		}
 		return r;
 	}
