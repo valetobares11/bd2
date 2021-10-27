@@ -53,5 +53,10 @@ public class Column {
 		
 		return r;
 	}
+
+	public String compare(Column column) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

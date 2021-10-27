@@ -101,17 +101,19 @@ public class Database {
 				result += "Ahora vamos a comparar las Tablas de ambas \n";
 				for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
 					Table table = (Table) iterator.next();
-				
-					if(other.getTable(table.getName())==null) {
+					Table otherTable = other.getTable(table.getName());
+					if(otherTable==null) {
 						result += "La BD1 posee una tabla llamada "+ table.getName() +" Pero esa tabla en la BD2 no existe";
 					} else {
-						result += "Ambas BDs poseen una tabla con el nombre : "+ table.getName();
-						result += "Veamos si ambas son iguales estructuralmente..";
-						if (!other.getTable(table.getName()).equals(table)) {
-							result += other.getTable(table.getName()).compare(table);
-						} else {
-							result += "Ambas son iguales estructuralmente " + table.toString();
-						}
+						if (otherTable.equals(table)) {
+							result += "Ambas BDs poseen una tabla con el nombre : "+ table.getName();
+							result += "Veamos si ambas son iguales estructuralmente..";
+							if (!otherTable.equals(table)) {
+								result += otherTable.compare(table);
+							} else {
+								result += "Ambas son iguales estructuralmente " + table.toString();
+							}
+						}	
 					}
 				}
 				/*if (procedures.size() != other.getProcedures().size()) {

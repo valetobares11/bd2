@@ -1,6 +1,7 @@
 package Proyecto.models;
 import java.util.Set;
 
+import sun.swing.MenuItemLayoutHelper.ColumnAlignment;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -152,30 +153,38 @@ public class Table {
 		indexs.add(index);	
 	}
 
-	public String compare(Table table) {
+	public String compare(Table other) {
 		String result = "";
-		/*if (this == obj)
-			return true;
-		if (!(obj instanceof Table))
-			return false;
-		Table other = (Table) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name)) {
-			return false;
-		}else {
 			if(columns.size() != other.getColumns().size()) {
-				return false;
+				result += "Las dos tablas poseen distintas cantidad de columnas";
+				if(columns.size() > other.getColumns().size()) {
+					result += "la tabla " +this.name+ " de la BD1 tiene mas columnas que la tabla "+ other.getName() +" de la BD2"; 
+				} else {
+					result += "la tabla " +this.name+ " de la BD1 tiene menos columnas que la tabla "+ other.getName() +" de la BD2"; 
+				}
 			} else {
+				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de columnas"; 
 				for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
 					Column column = (Column) iterator.next();
-					if(!other.getColumn(column.getName()).equals(column)) {
-						return false;
+					Column columnOther = other.getColumn(column.getName());
+					if(columnOther==null) {
+						result += "La BD1 posee una tabla llamada "+ this.getName() +" Con una Columna llamada "+ column.getName() + ""
+								+ "Pero la BD2 posee esta tabla pero esa tabla no posee esta columna";
+					} else {
+						if (columnOther.equals(column)) {
+							result += "Ambas BDs poseen una tabla con el nombre : "+ this.getName() + " y una columna llamada "+ column.getName() ;
+							result += "Veamos si ambas columnas son iguales estructuralmente..";
+							if (!columnOther.equals(column)) {
+								result += columnOther.compare(column);
+							} else {
+								result += "Ambas son iguales estructuralmente " + column.toString();
+							}
+						}
+						
 					}
 				}	
 			}
-			if (triggers.size() != other.getTriggers().size()) {
+			/*if (triggers.size() != other.getTriggers().size()) {
 				return false;
 			} else {
 				for (Iterator iterator = triggers.iterator(); iterator.hasNext();) {
