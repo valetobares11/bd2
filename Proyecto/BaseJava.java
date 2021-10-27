@@ -5,11 +5,15 @@ import java.sql.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
+import java.lang.reflect.Field;
 
 public class BaseJava {
 	private String driver;
@@ -76,8 +80,10 @@ public class BaseJava {
   *@throws SQLException si nuestra consulta es erronea o falla alguna funcion de metadata
   *@throws Connection para capturar los datos de nuestra bd
   *@return La base de datos
+ * @throws IllegalAccessException 
+ * @throws IllegalArgumentException 
   */
-  public Database crearBaseDatos(Connection connection) throws SQLException {
+  public Database crearBaseDatos(Connection connection) throws SQLException, IllegalArgumentException, IllegalAccessException {
 	  DatabaseMetaData metaData = connection.getMetaData();
 	  Database database = new Database(this.name_bd);
 	  ResultSet resultSetTables = metaData.getTables(this.name_bd,null, null,  new String[]{"TABLE"});
@@ -147,11 +153,17 @@ public class BaseJava {
 		  
 		  database.addTable(table);
 	  }
+	  
+	  Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
+
+	 
 	  //ACA LLENAMOS LOS PROCEDURE/FUNCTIONS DE LA BD
 	  ResultSet resultSetProcedure = metaData.getProcedures(connection.getCatalog(), null, null);
-		Procedure procedure;
+	  Procedure procedure;
+	 
 		while (resultSetProcedure.next()) {
-			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"),resultSetProcedure.getString("PROCEDURE_TYPE"));
+			int typeName = Integer.valueOf(resultSetProcedure.getString("PROCEDURE_TYPE")).intValue();
+			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"), jdbcMappings.get(typeName));
 			ResultSet pp = metaData.getProcedureColumns(connection.getCatalog(), connection.getSchema(), procedure.getName(), null);
 			List<String[]> list_parameters = procedure.getParameters();
 			while (pp.next()) {
@@ -160,9 +172,32 @@ public class BaseJava {
 			procedure.setParameters(list_parameters);
 			database.addProcedure(procedure);
 		}
-		
-	 return database; 
+	Procedure function; //a las funciones las tratamos como procedimientos tambien
+		ResultSet resultSetFunction = metaData.getFunctions(connection.getCatalog(), null, null);
+		while (resultSetFunction.next()) {
+			int name = Integer.valueOf(resultSetFunction.getString("FUNCTION_TYPE")).intValue();
+			function = new Procedure(resultSetFunction.getString("FUNCTION_NAME"),jdbcMappings.get((name)));
+			ResultSet pp = metaData.getFunctionColumns(connection.getCatalog(), connection.getSchema(), function.getName(), null);
+			List<String[]> list_parameters = function.getParameters();
+			while (pp.next()) {
+				list_parameters.add(new String[]{pp.getString("COLUMN_NAME"),pp.getString("COLUMN_TYPE")});
+			}
+			function.setParameters(list_parameters);
+			database.addProcedure(function);
+		}
+	return database; 
   }
 	 
+  
+  public Map<Integer, String> getAllJdbcTypeNames() throws IllegalArgumentException, IllegalAccessException {
+
+      Map<Integer, String> result = new HashMap<Integer, String>();
+
+      for (Field field : Types.class.getFields()) {
+          result.put((Integer)field.get(null), field.getName());
+      }
+
+      return result;
+  }
 
 }

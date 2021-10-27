@@ -13,7 +13,7 @@ import java.io.IOException;
 public class Main{
 	public static String PATH_BD1 = "Base_De_Datos/database.properties.mysql1";
 	public static String PATH_BD2 = "Base_De_Datos/database.properties.mysql2";
-	public static void main(String[] args){
+	public static void main(String[] args) throws IllegalArgumentException, IllegalAccessException{
 		try{
 	   
   			BaseJava base = new BaseJava(PATH_BD1);
