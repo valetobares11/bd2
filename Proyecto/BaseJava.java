@@ -89,6 +89,8 @@ public class BaseJava {
 		  nombreTable =resultSetTables.getString(3);
 		  Table table = new Table();
 		  table.setName(nombreTable);
+		  
+		  //ACA LLENAMOS LAS COLUMNAS DE LAS TABLAS
 		  ResultSet result_columns_table = metaData.getColumns(null,null, nombreTable, null);
 		  while (result_columns_table.next()) {
 	    	 Column columna = new Column();
@@ -98,7 +100,8 @@ public class BaseJava {
              columna.setType(colummType);
              table.addColumn(columna);
 		  }
-		 
+		  
+		 //ACA LLENAMOS LA TABBLAS CON LAS KEYS
 		  query= "select CONSTRAINT_NAME,CONSTRAINT_TYPE,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE NATURAL JOIN "
 		  		+ "information_schema.table_constraints where table_name = '"+nombreTable+"'";  
 		  ResultSet result_key_table = connection.createStatement().executeQuery(query);
@@ -121,7 +124,8 @@ public class BaseJava {
 	    	 }	
 		  table.addKey(key);
 		  }
-		 
+		  
+		  //ACA LLENAMOS LA TABLA CON SUS TRUGGERS
 		  query = "SELECT * FROM information_schema.TRIGGERS WHERE trigger_schema = '"+this.name_bd+"' "
 		  		+ "AND EVENT_OBJECT_TABLE = '"+nombreTable+"'";
 		  ResultSet resutl_trigger_table = connection.createStatement().executeQuery(query);
@@ -131,9 +135,19 @@ public class BaseJava {
 			  table.addTrigger(tigger);
 		  }
 		  
+		  //ACA LLENAMOS LA TABLA CON LOS INDICES
+		  query = "select INDEX_NAME,column_name,index_type  from information_schema.statistics "
+		  		+ " WHERE TABLE_SCHEMA = '"+this.name_bd+"' and table_name ='"+nombreTable+"'";
+		  ResultSet resutl_index_table = connection.createStatement().executeQuery(query);
+		  while(resutl_index_table.next()){
+			  Index index = new Index(resutl_index_table.getString("INDEX_NAME"),
+					  resutl_index_table.getString("index_type"),resutl_index_table.getString("column_name"));
+			  table.addIndex(index);
+		  }
+		  
 		  database.addTable(table);
 	  }
-	  
+	  //ACA LLENAMOS LOS PROCEDURE/FUNCTIONS DE LA BD
 	  ResultSet resultSetProcedure = metaData.getProcedures(connection.getCatalog(), null, null);
 		Procedure procedure;
 		while (resultSetProcedure.next()) {

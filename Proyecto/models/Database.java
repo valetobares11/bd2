@@ -4,6 +4,7 @@ import java.util.Set;
 
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Optional;
 
 public class Database {
@@ -48,7 +49,39 @@ public class Database {
 		return procedures.add(proc);
 	}
 
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Database))
+			return false;
+		Database other = (Database) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name)) {
+			return false;
+		} else {
+			if (tables.size() != other.getTables().size()) {
+				return false;
+			} else {
+				for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
+					Table table = (Table) iterator.next();
+					if(!other.getTable(table.getName()).equals(table)) {
+						return false;
+					}
+				}
+				if (procedures.size() != other.getProcedures().size()) {
+					return false;
+				} else {
+					
+				}
+				
+			}
+			
+		}
+		return false;
+	}
 
 	
 

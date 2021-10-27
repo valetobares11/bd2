@@ -12,7 +12,7 @@ public class Procedure {
 
 	public Procedure(String name, String procedure_return) {
 		this.name = name;
-		//status = Status.UNIQUE;
+	
 		this.procedure_return = procedure_return;
 		parameters = new ArrayList<String[]>();
 	}

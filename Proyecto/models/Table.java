@@ -3,6 +3,7 @@ import java.util.Set;
 
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Optional;
 
 public class Table {
@@ -10,6 +11,7 @@ public class Table {
 	private Set<Column> columns;
 	private Set<Trigger> triggers;
 	private Set<Key> keys;
+	private Set<Index> indexs;
 	private String name;
 
 
@@ -19,6 +21,7 @@ public class Table {
 		columns = new HashSet<Column>();
 		triggers = new HashSet<Trigger>();
 		keys = new HashSet<Key>();
+		indexs = new HashSet<Index>();
 	}
 
 	public Set<Column> getColumns() {
@@ -27,6 +30,17 @@ public class Table {
 
 	public Column getColumn(String name) {
 		return columns.stream().filter((x) -> x.getName().equals(name)).findFirst().get();
+	}
+	public Index getIndex(String name) {
+		return indexs.stream().filter((x) -> x.getName().equals(name)).findFirst().get();
+	}
+	
+	public Set<Index> getIndexs() {
+		return indexs;
+	}
+
+	public void setIndexs(Set<Index> indexs) {
+		this.indexs = indexs;
 	}
 
 	public Trigger getTrigger(String name) {
@@ -83,9 +97,33 @@ public class Table {
 		if (name == null) {
 			if (other.name != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!name.equals(other.name)) {
 			return false;
-		return true;
+		}else {
+			if(columns.size() != other.getColumns().size()) {
+				return false;
+			} else {
+				for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+					Column column = (Column) iterator.next();
+					if(!other.getColumn(column.getName()).equals(column)) {
+						return false;
+					}
+				}	
+			}
+			if (triggers.size() != other.getTriggers().size()) {
+				return false;
+			} else {
+				for (Iterator iterator = triggers.iterator(); iterator.hasNext();) {
+					Trigger trigger = (Trigger) iterator.next();
+					if(!other.getTrigger(trigger.getName()).equals(trigger)) {
+						return false;
+					}
+				}
+			}
+			
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -100,10 +138,17 @@ public class Table {
 		for (Trigger trigger : triggers) {
 			r = r + "\n     T:"+trigger.toString();
 		}
+		for (Index index : indexs) {
+			r = r + "\n     I:"+index.toString();
+		}
 		return r;
 	}
 
 	public void addTrigger(Trigger trigger) {
 		triggers.add(trigger);
+	}
+
+	public void addIndex(Index index) {
+		indexs.add(index);	
 	}
 }
