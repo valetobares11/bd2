@@ -190,13 +190,10 @@ public class BaseJava {
 	 
   
   public Map<Integer, String> getAllJdbcTypeNames() throws IllegalArgumentException, IllegalAccessException {
-
       Map<Integer, String> result = new HashMap<Integer, String>();
-
       for (Field field : Types.class.getFields()) {
           result.put((Integer)field.get(null), field.getName());
       }
-
       return result;
   }
 

@@ -151,4 +151,43 @@ public class Table {
 	public void addIndex(Index index) {
 		indexs.add(index);	
 	}
+
+	public String compare(Table table) {
+		String result = "";
+		/*if (this == obj)
+			return true;
+		if (!(obj instanceof Table))
+			return false;
+		Table other = (Table) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name)) {
+			return false;
+		}else {
+			if(columns.size() != other.getColumns().size()) {
+				return false;
+			} else {
+				for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+					Column column = (Column) iterator.next();
+					if(!other.getColumn(column.getName()).equals(column)) {
+						return false;
+					}
+				}	
+			}
+			if (triggers.size() != other.getTriggers().size()) {
+				return false;
+			} else {
+				for (Iterator iterator = triggers.iterator(); iterator.hasNext();) {
+					Trigger trigger = (Trigger) iterator.next();
+					if(!other.getTrigger(trigger.getName()).equals(trigger)) {
+						return false;
+					}
+				}
+			}
+			
+			return true;
+		}	*/
+		return result;
+	}
 }
