@@ -105,4 +105,9 @@ public class Key {
 				+ ", referenceKey=" + referenceKey +  "]";
 	}
 
+	public String compare(Key key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

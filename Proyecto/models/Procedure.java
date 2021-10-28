@@ -1,5 +1,6 @@
 package Proyecto.models;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -23,6 +24,16 @@ public class Procedure {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public boolean constainsParameter(String param) {
+		for (Iterator iterator = parameters.iterator(); iterator.hasNext();) {
+			String parameter = (String) iterator.next();
+			if (parameter.equals(param)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public List<String[]> getParameters() {
@@ -63,15 +74,31 @@ public class Procedure {
 		if (name == null) {
 			if (other.name != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!name.equals(other.name)) {
 			return false;
-		return true;
+		} else {
+			if (parameters.size() != other.getParameters().size()) {
+				return false;
+			}
+			for (Iterator iterator = parameters.iterator(); iterator.hasNext();) {
+				String parameter = (String) iterator.next();
+				if (!other.constainsParameter(parameter)) {
+					return false;
+				}
+			}
+			
+		}
+		return procedure_return.equals(other.getProcedure_return());
 	}
 
 	@Override
 	public String toString() {
-		return "Procedure [name=" + name + ", parameters=" + parameters + ", procedure_return=" + procedure_return
-				+ "]";
+		return "Procedure [name=" + name + ", parameters=" + parameters + ", procedure_return=" + procedure_return+ "]\n";
+	}
+
+	public String compare(Procedure procedure) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

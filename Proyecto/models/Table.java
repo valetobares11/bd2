@@ -106,7 +106,7 @@ public class Table {
 			} else {
 				for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
 					Column column = (Column) iterator.next();
-					if(!other.getColumn(column.getName()).equals(column)) {
+					if(other.getColumn(column.getName())!=null && !other.getColumn(column.getName()).equals(column)) {
 						return false;
 					}
 				}	
@@ -116,12 +116,31 @@ public class Table {
 			} else {
 				for (Iterator iterator = triggers.iterator(); iterator.hasNext();) {
 					Trigger trigger = (Trigger) iterator.next();
-					if(!other.getTrigger(trigger.getName()).equals(trigger)) {
+					if(other.getTrigger(trigger.getName())!= null && !other.getTrigger(trigger.getName()).equals(trigger)) {
 						return false;
 					}
 				}
 			}
-			
+			if (indexs.size() != other.getTriggers().size()) {
+				return false;
+			} else {
+				for (Iterator iterator = indexs.iterator(); iterator.hasNext();) {
+					Index index = (Index) iterator.next();
+					if(other.getIndex(index.getName())!= null && !other.getIndex(index.getName()).equals(index)) {
+						return false;
+					}
+				}
+			}
+			if (keys.size() != other.getKeys().size()) {
+				return false;
+			} else {
+				for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
+					Key key = (Key) iterator.next();
+					if(other.getIndex(key.getKeyName()) != null && !other.getKey(key).equals(key)) {
+						return false;
+					}
+				}
+			}
 			return true;
 		}
 		return false;
@@ -156,47 +175,137 @@ public class Table {
 	public String compare(Table other) {
 		String result = "";
 			if(columns.size() != other.getColumns().size()) {
-				result += "Las dos tablas poseen distintas cantidad de columnas";
+				result += "Las dos tablas poseen distintas cantidad de columnas\n";
 				if(columns.size() > other.getColumns().size()) {
-					result += "la tabla " +this.name+ " de la BD1 tiene mas columnas que la tabla "+ other.getName() +" de la BD2"; 
+					result += "la tabla " +this.name+ " de la BD1 tiene mas columnas que la tabla "+ other.getName() +" de la BD2 "
+							 + "Posee "+ columns.size()+ "y la otra "+ other.getIndexs().size()+ "\n"; 
 				} else {
-					result += "la tabla " +this.name+ " de la BD1 tiene menos columnas que la tabla "+ other.getName() +" de la BD2"; 
+					result += "la tabla " +this.name+ " de la BD1 tiene menos columnas que la tabla "+ other.getName() +" de la BD2 "
+							+ "Posee "+ other.getColumns().size()+ "y la otra "+ columns.size()+ "\n" ; 
 				}
+				result += "Por lo tanto no tiene sentido seguir comparando entre las columnas de estas dos tablas"+ "\n";
 			} else {
-				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de columnas"; 
+				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de columnas \n"
+						+ "Ahora veamos sus columnas \n"; 
 				for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
 					Column column = (Column) iterator.next();
 					Column columnOther = other.getColumn(column.getName());
 					if(columnOther==null) {
-						result += "La BD1 posee una tabla llamada "+ this.getName() +" Con una Columna llamada "+ column.getName() + ""
-								+ "Pero la BD2 posee esta tabla pero esa tabla no posee esta columna";
+						result += "La BD1 con tabla "+ this.getName() +"Posee una Columna llamada "+ column.getName() + ""
+								+ "Pero la BD2 con esta tabla no posee esta columna \n";
 					} else {
-						if (columnOther.equals(column)) {
-							result += "Ambas BDs poseen una tabla con el nombre : "+ this.getName() + " y una columna llamada "+ column.getName() ;
-							result += "Veamos si ambas columnas son iguales estructuralmente..";
+						if (columnOther.getName().equals(column.getName())) {
+							result += "Ambas BDs con la tabla : "+ this.getName() + " poseen una columna llamada "+ column.getName() ;
+							result += "Veamos si ambas columnas son iguales estructuralmente.. \n";
 							if (!columnOther.equals(column)) {
+								
 								result += columnOther.compare(column);
 							} else {
-								result += "Ambas son iguales estructuralmente " + column.toString();
+								result += "Ambas son iguales estructuralmente con la siguiente estructura" + column.toString()+ "\n";
 							}
 						}
 						
 					}
 				}	
 			}
-			/*if (triggers.size() != other.getTriggers().size()) {
-				return false;
+			result += "Ahora comparemnos entre los triggers de ambas tablas \n";
+			if (triggers.size() != other.getTriggers().size()) {
+				result += " Las tablas poseen distintas cantidad de triggers \n"; 
+				if(triggers.size() > other.getTriggers().size()) {
+					result += "la tabla " +this.name+ " de la BD1 tiene mas triggers  que la tabla "+ other.getName() +" de la BD2"
+							+ "Posee "+ triggers.size()+ "y la otra "+ other.getTriggers().size() + "\n"; 
+				} else {
+					result += "la tabla " +other.getName()+ " de la BD2 tiene mas triggers  que la tabla "+ name +" de la BD1"
+							+ "Posee "+ other.getTriggers().size()+ "y la otra "+ triggers.size() + "\n"; 
+				}
+				result += "Por lo tanto no tiene sentido seguir comparando entre los triggers de estas dos tablas \n";
 			} else {
+				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de triggers \n"
+						+ "Ahora veamos sus triggers \n"; 
 				for (Iterator iterator = triggers.iterator(); iterator.hasNext();) {
 					Trigger trigger = (Trigger) iterator.next();
-					if(!other.getTrigger(trigger.getName()).equals(trigger)) {
-						return false;
+					Trigger otherTrigger = other.getTrigger(trigger.getName());
+					if(otherTrigger==null) {
+						result += "La BD1 con tabla: "+ this.getName() +" Poseen un Trigger llamado "+ trigger.getName() + ""
+								+ "Pero la BD2 con esta tabla no posee este trigger \n";
+					} else {
+						if (otherTrigger.getName().equals(trigger.getName())) {
+							result += "Ambas BDs con tabla : "+ this.getName() + " Poseen un trigger llamado "+ trigger.getName() ;
+							result += "Veamos si ambos triggers son iguales estructuralmente.. \n";
+							if (!otherTrigger.equals(trigger)) {
+								result += otherTrigger.compare(trigger);
+							} else {
+								result += "Ambos Triggers son iguales estructuralmente con la siguiente estructura :\n" + trigger.toString() + "\n";
+							}
+						}
+						
 					}
 				}
 			}
+			result += "Ahora comparemnos entre los indices de ambas tablas \n";
+			if (indexs.size() != other.getIndexs().size()) {
+				result += " Las tablas poseen distintas cantidad de indices \n"; 
+				if(indexs.size() > other.getIndexs().size()) {
+					result += "la tabla " +this.name+ " de la BD1 tiene mas indices  que la tabla "+ other.getName() +" de la BD2"
+							+ "Posee "+ indexs.size()+ "y la otra "+ other.getIndexs().size() + "\n"; 
+				} else {
+					result += "la tabla " +other.getName()+ " de la BD2 tiene mas indices  que la tabla "+ name +" de la BD1"
+							+ "Posee "+ other.getIndexs().size()+ "y la otra "+ indexs.size() + "\n"; 
+				}
+				result += "Por lo tanto no tiene sentido seguir comparando entre los indices de estas dos tablas \n";
+			} else {
+				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de indices \n"
+						+ "Ahora veamos sus indices \n"; 
+				for (Iterator iterator = indexs.iterator(); iterator.hasNext();) {
+					Index index = (Index) iterator.next();
+					Index otherIndex = other.getIndex(index.getName());
+					if(otherIndex==null) {
+						result += "La BD1 con tabla "+ this.getName() +" Posee un Index llamado "+ index.getName() + ""
+								+ "Pero la BD2 con esta tabla no posee este index \n";
+					} else {
+						if (otherIndex.getName().equals(index.getName())) {
+							result += "Ambas BDs con tabla : "+ this.getName() + " Poseen un index llamado "+ index.getName() ;
+							result += "Veamos si ambos indices son iguales estructuralmente.. \n";
+							if (!otherIndex.equals(index)) {
+								result += otherIndex.compare(index);
+							} else {
+								result += "Ambos Indices son iguales estructuralmente con la siguiente estructura :\n" + index.toString() + "\n";
+							}
+						}
+						
+					}
+				}
+			}
+			result += "Ahora vamos a  comparar entre las Claves de ambas tablas \n";
+			if (keys.size() != other.getKeys().size()) {
+				result += " Las tablas poseen distintas cantidad de Claves \n"; 
+				if(keys.size() > other.getKeys().size()) {
+					result += "la tabla " +this.name+ " de la BD1 tiene mas claves que la tabla "+ other.getName() +" de la BD2"
+							+ "Posee "+ keys.size()+ "y la otra "+ other.getKeys().size()+ "\n"; 
+				} else {
+					result += "la tabla " +other.getName()+ " de la BD2 tiene mas claves que la tabla "+ name +" de la BD1"
+							+ "Posee "+ other.getKeys().size()+ "y la otra "+ keys.size() + "\n"; 
+				}
+				result += "Por lo tanto no tiene sentido seguir comparando entre las claves de estas dos tablas \n";
+			} else {
+				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de Claves \n"
+						+ "Ahora veamos sus Claves \n"; 
+				for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
+					Key key = (Key) iterator.next();
+					Key otherKey = other.getKey(key);
+					if(otherKey==null) {
+						result += "La BD1 con tabla "+ this.getName() +" Posee una clave llamada "+ key.getKeyName() + ""
+								+ "Pero la BD2 con esta tabla No posee una key similar con la misma estructura \n";
+						result += otherKey.compare(key)+ "\n";
+					} else {
+						result += "Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key "+ key.getKeyName()+ ""
+								+ " de la BD1 con esta tabla \n"+ key.toString() +" \n"
+								+ " Y la clave "+ otherKey.getKeyName()+ " de la BD2 con la misma tabla \n"+otherKey.toString() + "\n";
+						}
+						
+					}
+			}
 			
-			return true;
-		}	*/
 		return result;
 	}
 }

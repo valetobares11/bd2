@@ -17,7 +17,7 @@ public class Index {
 	
 	@Override
 	public String toString() {
-		return "Index [name=" + name + ", type=" + type + ", column=" + column + "]";
+		return "Index [name=" + name + ", type=" + type + ", column=" + column + "]\n";
 	}
 
 	public String getName() {
@@ -68,6 +68,11 @@ public class Index {
 		} else if (!type.equals(other.type))
 			return false;
 		return true;
+	}
+
+	public String compare(Index index) {
+		String result = "";
+		return result;
 	}
 	
 	

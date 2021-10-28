@@ -58,7 +58,13 @@ public class Trigger {
 	
 	@Override
 	public String toString() {
-		return "Trigger [name=" + name + ", shot=" + shot + ", action= "+action+"]";
+		return "Trigger [name=" + name + ", shot=" + shot + ", action= "+action+"] \n";
+	}
+
+	public String compare(Trigger trigger) {
+		String result = "";
+		// TODO Auto-generated method stub
+		return result;
 	}
 	
 }

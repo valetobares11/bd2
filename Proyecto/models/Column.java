@@ -43,7 +43,7 @@ public class Column {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		return true;
+		return type.equals(other.getType());
 	}
 
 
@@ -55,8 +55,15 @@ public class Column {
 	}
 
 	public String compare(Column column) {
-		// TODO Auto-generated method stub
-		return null;
+		String result = "";
+			if(type.equals(column.getType())) {
+				result += "el tipo de la columnas son iguales de tipo " + type;
+			} else {
+				result += "el tipo de las columnas son distintos el de la columna " + name + " de la BD1 es" +type + ""
+						+ " y el de la columna " + column.getName() + " de la BD2  es " + column.getType();
+			} 
+		return result;
+		
 	}
 	
 }
