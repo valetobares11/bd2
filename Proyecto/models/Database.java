@@ -84,7 +84,7 @@ public class Database {
 			}		
 			
 		}
-		return false;
+		return true;
 	}
 	
 	public String compare(Database other) {
@@ -102,7 +102,51 @@ public class Database {
 				} else {
 					result += "El tamaño de la BD2 de tablas es Mayor que la BD1 \n";
 				}
-				result += "Por lo tanto no tiene sentido seguir comparando entre las tablas de estas dos Base de Datos\n";
+				
+				Set<Table> tablasIguales = new HashSet<Table>();
+				Set<Table> tablasbd1 = new HashSet<Table>();
+				Set<Table> tablasbd2 = new HashSet<Table>();
+				
+				for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
+					Table table = (Table) iterator.next();
+					Table table2 = other.getTable(table.getName());
+					if (table2!=null && !table.equals(table2)) {
+						tablasbd1.add(table);
+					} else {
+						tablasIguales.add(table);
+					}
+				}
+				for (Iterator iterator = other.getTables().iterator(); iterator.hasNext();) {
+					Table table = (Table) iterator.next();
+					Table table2 = this.getTable(table.getName());
+					if (table2!=null && !table.equals(table2)) {
+						tablasbd2.add(table);
+					} 
+				}
+				
+				result += "Por lo tanto las  dos Base de Datos son distintas a continuacion mostramos las tablas equivalentes y diferentes\n"
+						+ "Las tablas iguales son :\n";
+				if (tablasIguales.size() >0) {
+					for (Iterator iterator = tablasIguales.iterator(); iterator.hasNext();) {
+						Table table = (Table) iterator.next();
+						result +=table.toString()+"\n";
+					}
+				}
+				if (tablasbd1.size() >0) {
+					result+= "Las tablas de la BD1 diferentes de la BD2 son :";
+					for (Iterator iterator = tablasbd1.iterator(); iterator.hasNext();) {
+						Table table = (Table) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
+				if (tablasbd2.size() >0) {
+					result+= "Las tablas de la BD2 diferentes de la BD1 son :";
+					for (Iterator iterator = tablasbd2.iterator(); iterator.hasNext();) {
+						Table table = (Table) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
+				
 			} else {
 				result += "Ahora vamos a comparar las Tablas de ambas \n";
 				for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
@@ -134,7 +178,50 @@ public class Database {
 				} else {
 					result += "El tamaño de la BD2 de procedimientos es Mayor que la BD1 \n";
 				}
-				result += "Por lo tanto no tiene sentido seguir comparando entre los procedimientos de estas dos Base de Datos\n";
+				
+				Set<Procedure> proceduresIguales = new HashSet<Procedure>();
+				Set<Procedure> proceduresbd1 = new HashSet<Procedure>();
+				Set<Procedure> proceduresbd2 = new HashSet<Procedure>();
+				
+				for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
+					Procedure table = (Procedure) iterator.next();
+					Procedure table2 = other.getProcedure(table.getName());
+					if (table2!=null && !table.equals(table2)) {
+						proceduresbd1.add(table);
+					} else {
+						proceduresIguales.add(table);
+					}
+				}
+				for (Iterator iterator = other.getProcedures().iterator(); iterator.hasNext();) {
+					Procedure table = (Procedure) iterator.next();
+					Procedure table2 = this.getProcedure(table.getName());
+					if (table2!=null && !table.equals(table2)) {
+						proceduresbd2.add(table);
+					} 
+				}
+				
+				result += "Por lo tanto las  dos Base de Datos son distintas a continuacion mostramos los procedimientos equivalentes y diferentes\n"
+						+ "Los procedimientos iguales son :\n";
+				if (proceduresIguales.size() >0) {
+					for (Iterator iterator = proceduresIguales.iterator(); iterator.hasNext();) {
+						Procedure table = (Procedure) iterator.next();
+						result +=table.toString()+"\n";
+					}
+				}
+				if (proceduresbd1.size() >0) {
+					result+= "Los procedimientos de la BD1 diferentes de la BD2 son :";
+					for (Iterator iterator = proceduresbd1.iterator(); iterator.hasNext();) {
+						Procedure table = (Procedure) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
+				if (proceduresbd2.size() >0) {
+					result+= "Los procedimientos de la BD2 diferentes de la BD1 son :";
+					for (Iterator iterator = proceduresbd2.iterator(); iterator.hasNext();) {
+						Procedure table = (Procedure) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
 			} else {
 				result += "Ahora vamos a comparar las Procedimientos de ambas \n";
 				for (Iterator iterator = procedures.iterator(); iterator.hasNext();) {
@@ -158,6 +245,14 @@ public class Database {
 				
 			}
 		}
+		
+		if (this.equals(other)) {
+			result += "En conclucion podemos decir que las base de datos son iguales por todo lo mencionado anteriormente \n";
+		} else {
+			result += "En conclucion podemos decir que las base de datos son distintas por todo lo mencionado anteriormente \n";
+
+		}
+		
 		System.out.println("Aquí terminamos con la comparacion de las BDs y devolvemos el informe");
 		return result;
 	}

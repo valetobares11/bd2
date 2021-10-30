@@ -52,7 +52,7 @@ public class Trigger {
 		} else {
 			return (action.equals(other.getAction()) && shot.equals(other.getShot()));
 		}
-		return false;
+		return true;
 	}
 
 	
@@ -63,7 +63,6 @@ public class Trigger {
 
 	public String compare(Trigger trigger) {
 		String result = "";
-		// TODO Auto-generated method stub
 		if (this == trigger)
 			result += "Ambos trigger son inguales ya que son el mismo trigger.\n";
 		if (trigger == null)

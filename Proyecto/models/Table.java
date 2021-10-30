@@ -15,9 +15,6 @@ public class Table {
 	private Set<Index> indexs;
 	private String name;
 
-
-	//public Status status;
-
 	public Table() {
 		columns = new HashSet<Column>();
 		triggers = new HashSet<Trigger>();
@@ -31,9 +28,6 @@ public class Table {
 
 	public Column getColumn(String name) {
 		return columns.stream().filter((x) -> x.getName().equals(name)).findFirst().get();
-	}
-	public Index getIndex(String name) {
-		return indexs.stream().filter((x) -> x.getName().equals(name)).findFirst().get();
 	}
 	
 	public Set<Index> getIndexs() {
@@ -76,6 +70,10 @@ public class Table {
 
 	public Key getKey(Key key) {
 		Optional<Key> o = keys.stream().filter(x -> x.equals(key)).findAny();
+		return o.isPresent()? o.get(): null;
+	}
+	public Index getIndex(Index index) {
+		Optional<Index> o = indexs.stream().filter(x -> x.equals(index)).findAny();
 		return o.isPresent()? o.get(): null;
 	}
 
@@ -121,12 +119,12 @@ public class Table {
 					}
 				}
 			}
-			if (indexs.size() != other.getTriggers().size()) {
+			if (indexs.size() != other.getIndexs().size()) {
 				return false;
 			} else {
 				for (Iterator iterator = indexs.iterator(); iterator.hasNext();) {
 					Index index = (Index) iterator.next();
-					if(other.getIndex(index.getName())!= null && !other.getIndex(index.getName()).equals(index)) {
+					if(other.getIndex(index)!= null && !other.getIndex(index).equals(index)) {
 						return false;
 					}
 				}
@@ -136,14 +134,13 @@ public class Table {
 			} else {
 				for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
 					Key key = (Key) iterator.next();
-					if(other.getIndex(key.getKeyName()) != null && !other.getKey(key).equals(key)) {
+					if(other.getKey(key) != null && !other.getKey(key).equals(key)) {
 						return false;
 					}
 				}
 			}
-			return true;
 		}
-		return false;
+		return true;
 	}
 
 	@Override
@@ -258,7 +255,7 @@ public class Table {
 						+ "Ahora veamos sus indices \n"; 
 				for (Iterator iterator = indexs.iterator(); iterator.hasNext();) {
 					Index index = (Index) iterator.next();
-					Index otherIndex = other.getIndex(index.getName());
+					Index otherIndex = other.getIndex(index);
 					if(otherIndex==null) {
 						result += "La BD1 con tabla "+ this.getName() +" Posee un Index llamado "+ index.getName() + ""
 								+ "Pero la BD2 con esta tabla no posee este index \n";
