@@ -174,13 +174,54 @@ public class Table {
 			if(columns.size() != other.getColumns().size()) {
 				result += "Las dos tablas poseen distintas cantidad de columnas\n";
 				if(columns.size() > other.getColumns().size()) {
-					result += "la tabla " +this.name+ " de la BD1 tiene mas columnas que la tabla "+ other.getName() +" de la BD2 "
+					result += "La tabla " +this.name+ " de la BD1 tiene mas columnas que la tabla "+ other.getName() +" de la BD2 "
 							 + "Posee "+ columns.size()+ "y la otra "+ other.getIndexs().size()+ "\n"; 
 				} else {
-					result += "la tabla " +this.name+ " de la BD1 tiene menos columnas que la tabla "+ other.getName() +" de la BD2 "
+					result += "La tabla " +this.name+ " de la BD1 tiene menos columnas que la tabla "+ other.getName() +" de la BD2 "
 							+ "Posee "+ other.getColumns().size()+ "y la otra "+ columns.size()+ "\n" ; 
 				}
-				result += "Por lo tanto no tiene sentido seguir comparando entre las columnas de estas dos tablas"+ "\n";
+				Set<Column> columnasIguales = new HashSet<Column>();
+				Set<Column> columnasbd1 = new HashSet<Column>();
+				Set<Column> columnasbd2 = new HashSet<Column>();
+				
+				for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+					Column column = (Column) iterator.next();
+					Column column2 = other.getColumn(column.getName());
+					if (column2!=null && !column.equals(column2)) {
+						columnasbd1.add(column);
+					} else {
+						columnasIguales.add(column);
+					}
+				}
+				for (Iterator iterator = other.getColumns().iterator(); iterator.hasNext();) {
+					Column column = (Column) iterator.next();
+					Column column2 = this.getColumn(column.getName());
+					if (column2!=null && !column.equals(column2)) {
+						columnasbd2.add(column);
+					} 
+				}
+				result += "A continuacion mostramos las columnas equivalentes y diferentes\n";
+				if (columnasIguales.size() >0) {
+					result +=  "Las columnas iguales son :\n";
+					for (Iterator iterator = columnasIguales.iterator(); iterator.hasNext();) {
+						Column table = (Column) iterator.next();
+						result +=table.toString()+"\n";
+					}
+				}
+				if (columnasbd1.size() >0) {
+					result+= "Las columnas de la tabla "+this.getName()+" de la BD1 diferentes de la tabla "+other.getName()+" de la BD2 son :";
+					for (Iterator iterator = columnasbd1.iterator(); iterator.hasNext();) {
+						Column table = (Column) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
+				if (columnasbd2.size() >0) {
+					result+= "Las columnas de la tabla "+this.getName()+" de la BD2 diferentes de la tabla "+other.getName()+" de la BD1 son :";
+					for (Iterator iterator = columnasbd2.iterator(); iterator.hasNext();) {
+						Column table = (Column) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
 			} else {
 				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de columnas \n"
 						+ "Ahora veamos sus columnas \n"; 
@@ -205,17 +246,58 @@ public class Table {
 					}
 				}	
 			}
-			result += "Ahora comparemnos entre los triggers de ambas tablas \n";
+			result += "Ahora comparemos entre los triggers de ambas tablas \n";
 			if (triggers.size() != other.getTriggers().size()) {
 				result += " Las tablas poseen distintas cantidad de triggers \n"; 
 				if(triggers.size() > other.getTriggers().size()) {
-					result += "la tabla " +this.name+ " de la BD1 tiene mas triggers  que la tabla "+ other.getName() +" de la BD2"
+					result += "La tabla " +this.name+ " de la BD1 tiene mas triggers  que la tabla "+ other.getName() +" de la BD2"
 							+ "Posee "+ triggers.size()+ "y la otra "+ other.getTriggers().size() + "\n"; 
 				} else {
-					result += "la tabla " +other.getName()+ " de la BD2 tiene mas triggers  que la tabla "+ name +" de la BD1"
+					result += "La tabla " +other.getName()+ " de la BD2 tiene mas triggers  que la tabla "+ name +" de la BD1"
 							+ "Posee "+ other.getTriggers().size()+ "y la otra "+ triggers.size() + "\n"; 
 				}
-				result += "Por lo tanto no tiene sentido seguir comparando entre los triggers de estas dos tablas \n";
+				Set<Trigger> columnasIguales = new HashSet<Trigger>();
+				Set<Trigger> columnasbd1 = new HashSet<Trigger>();
+				Set<Trigger> columnasbd2 = new HashSet<Trigger>();
+				
+				for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+					Trigger column = (Trigger) iterator.next();
+					Trigger column2 = other.getTrigger(column.getName());
+					if (column2!=null && !column.equals(column2)) {
+						columnasbd1.add(column);
+					} else {
+						columnasIguales.add(column);
+					}
+				}
+				for (Iterator iterator = other.getTriggers().iterator(); iterator.hasNext();) {
+					Trigger column = (Trigger) iterator.next();
+					Trigger column2 = this.getTrigger(column.getName());
+					if (column2!=null && !column.equals(column2)) {
+						columnasbd2.add(column);
+					} 
+				}
+				result += "A continuacion mostramos los triggers equivalentes y diferentes\n";
+				if (columnasIguales.size() >0) {
+					result +=  "Las trigger iguales son :\n";
+					for (Iterator iterator = columnasIguales.iterator(); iterator.hasNext();) {
+						Trigger table = (Trigger) iterator.next();
+						result +=table.toString()+"\n";
+					}
+				}
+				if (columnasbd1.size() >0) {
+					result+= "Los trigger de la tabla "+this.getName()+" de la BD1 diferentes de la tabla "+other.getName()+" de la BD2 son :";
+					for (Iterator iterator = columnasbd1.iterator(); iterator.hasNext();) {
+						Trigger table = (Trigger) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
+				if (columnasbd2.size() >0) {
+					result+= "Los trigger de la tabla "+this.getName()+" de la BD2 diferentes de la tabla "+other.getName()+" de la BD1 son :";
+					for (Iterator iterator = columnasbd2.iterator(); iterator.hasNext();) {
+						Trigger table = (Trigger) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
 			} else {
 				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de triggers \n"
 						+ "Ahora veamos sus triggers \n"; 
@@ -249,7 +331,48 @@ public class Table {
 					result += "la tabla " +other.getName()+ " de la BD2 tiene mas indices  que la tabla "+ name +" de la BD1"
 							+ "Posee "+ other.getIndexs().size()+ "y la otra "+ indexs.size() + "\n"; 
 				}
-				result += "Por lo tanto no tiene sentido seguir comparando entre los indices de estas dos tablas \n";
+				Set<Index> columnasIguales = new HashSet<Index>();
+				Set<Index> columnasbd1 = new HashSet<Index>();
+				Set<Index> columnasbd2 = new HashSet<Index>();
+				
+				for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+					Index column = (Index) iterator.next();
+					Index column2 = other.getIndex(column);
+					if (column2!=null && !column.equals(column2)) {
+						columnasbd1.add(column);
+					} else {
+						columnasIguales.add(column);
+					}
+				}
+				for (Iterator iterator = other.getIndexs().iterator(); iterator.hasNext();) {
+					Index column = (Index) iterator.next();
+					Index column2 = this.getIndex(column);
+					if (column2!=null && !column.equals(column2)) {
+						columnasbd2.add(column);
+					} 
+				}
+				result += "A continuacion mostramos los indices equivalentes y diferentes\n";
+				if (columnasIguales.size() >0) {
+					result +=  "Las indices iguales son :\n";
+					for (Iterator iterator = columnasIguales.iterator(); iterator.hasNext();) {
+						Index table = (Index) iterator.next();
+						result +=table.toString()+"\n";
+					}
+				}
+				if (columnasbd1.size() >0) {
+					result+= "Los indices de la tabla "+this.getName()+" de la BD1 diferentes de la tabla "+other.getName()+" de la BD2 son :";
+					for (Iterator iterator = columnasbd1.iterator(); iterator.hasNext();) {
+						Index table = (Index) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
+				if (columnasbd2.size() >0) {
+					result+= "Los indices de la tabla "+this.getName()+" de la BD2 diferentes de la tabla "+other.getName()+" de la BD1 son :";
+					for (Iterator iterator = columnasbd2.iterator(); iterator.hasNext();) {
+						Index table = (Index) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
 			} else {
 				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de indices \n"
 						+ "Ahora veamos sus indices \n"; 
@@ -283,7 +406,48 @@ public class Table {
 					result += "la tabla " +other.getName()+ " de la BD2 tiene mas claves que la tabla "+ name +" de la BD1"
 							+ "Posee "+ other.getKeys().size()+ "y la otra "+ keys.size() + "\n"; 
 				}
-				result += "Por lo tanto no tiene sentido seguir comparando entre las claves de estas dos tablas \n";
+				Set<Key> columnasIguales = new HashSet<Key>();
+				Set<Key> columnasbd1 = new HashSet<Key>();
+				Set<Key> columnasbd2 = new HashSet<Key>();
+				
+				for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
+					Key column = (Key) iterator.next();
+					Key column2 = other.getKey(column);
+					if (column2!=null && !column.equals(column2)) {
+						columnasbd1.add(column);
+					} else {
+						columnasIguales.add(column);
+					}
+				}
+				for (Iterator iterator = other.getKeys().iterator(); iterator.hasNext();) {
+					Key column = (Key) iterator.next();
+					Key column2 = this.getKey(column);
+					if (column2!=null && !column.equals(column2)) {
+						columnasbd2.add(column);
+					} 
+				}
+				result += "A continuacion mostramos las claves equivalentes y diferentes\n";
+				if (columnasIguales.size() >0) {
+					result +=  "Las Claves iguales son :\n";
+					for (Iterator iterator = columnasIguales.iterator(); iterator.hasNext();) {
+						Key table = (Key) iterator.next();
+						result +=table.toString()+"\n";
+					}
+				}
+				if (columnasbd1.size() >0) {
+					result+= "Las claves de la tabla "+this.getName()+" de la BD1 diferentes de la tabla "+other.getName()+" de la BD2 son :";
+					for (Iterator iterator = columnasbd1.iterator(); iterator.hasNext();) {
+						Key table = (Key) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
+				if (columnasbd2.size() >0) {
+					result+= "Las Claves de la tabla "+this.getName()+" de la BD2 diferentes de la tabla "+other.getName()+" de la BD1 son :";
+					for (Iterator iterator = columnasbd2.iterator(); iterator.hasNext();) {
+						Key table = (Key) iterator.next();
+						result += table.toString()+"\n";
+					}
+				}
 			} else {
 				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de Claves \n"
 						+ "Ahora veamos sus Claves \n"; 

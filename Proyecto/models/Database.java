@@ -88,13 +88,14 @@ public class Database {
 	}
 	
 	public String compare(Database other) {
-	String result = "Comenzamnos con la comparacion de las base de datos\n";
+	String result = "Comenzamnos con la comparacion de las base de datos\n"
+			+ "\n";
+	
 		if (!name.equals(other.name)) {
 			result += "Primero el nombre de las base de datos son distintos una se llama "+ name +" y la otra "+ other.getName()+"\n";
 			
 		} else {
-			 result += "El nombre de las base de datos son iguales, ambas se llaman "+ name +"\n"
-			 		+ "Seguimos con las Tablas";
+			 result += "El nombre de las base de datos son iguales, ambas se llaman "+ name +"\n\n";
 			if (tables.size() != other.getTables().size()) {
 				result += "El tamaño de las tablas es distinto ... \n";
 				if (tables.size() > other.getTables().size()) {
@@ -124,9 +125,10 @@ public class Database {
 					} 
 				}
 				
-				result += "Por lo tanto las  dos Base de Datos son distintas a continuacion mostramos las tablas equivalentes y diferentes\n"
-						+ "Las tablas iguales son :\n";
+				result += "Por lo tanto las  dos Base de Datos son distintas a continuacion mostramos las tablas equivalentes y diferentes\n";
+					
 				if (tablasIguales.size() >0) {
+					result += "Las tablas iguales son :\n";
 					for (Iterator iterator = tablasIguales.iterator(); iterator.hasNext();) {
 						Table table = (Table) iterator.next();
 						result +=table.toString()+"\n";
@@ -156,12 +158,12 @@ public class Database {
 						result += "La BD1 posee una tabla llamada "+ table.getName() +" Pero esa tabla en la BD2 no existe\n";
 					} else {
 						if (otherTable.getName().equals(table.getName())) {
-							result += "Ambas BDs poseen una tabla con el nombre : "+ table.getName()+"\n";
-							result += "Veamos si ambas son iguales estructuralmente..\n";
+							result += "Las dos BDs tienen una tabla con el nombre : "+ table.getName()+"\n";
+							//result += "Veamos si ambas son iguales estructuralmente..\n";
 							if (!otherTable.equals(table)) {
 								result += otherTable.compare(table);
 							} else {
-								result += "Ambas son iguales estructuralmente \n" + table.toString();
+								result += "Y Ambas son iguales estructuralmente: \n" + table.toString();
 							}
 						}	
 					}
@@ -169,7 +171,7 @@ public class Database {
 				
 			}
 			
-			result += "Seguimos comparando los procedimientos/funciones de ambas BD (aclaramos que cuando"
+			result += "\n\nSeguimos comparando los procedimientos/funciones de ambas BD (aclaramos que cuando"
 					+ " hacemos referecia a los procedimientos tambien incluimos a las funciones)\n";
 			if (procedures.size() != other.getProcedures().size()) {
 				result += "El tamaño de los procedimientos/funciones es distinto ... \n";
@@ -200,9 +202,9 @@ public class Database {
 					} 
 				}
 				
-				result += "Por lo tanto las  dos Base de Datos son distintas a continuacion mostramos los procedimientos equivalentes y diferentes\n"
-						+ "Los procedimientos iguales son :\n";
+				result += "Por lo tanto las  dos Base de Datos son distintas a continuacion mostramos los procedimientos equivalentes y diferentes\n";
 				if (proceduresIguales.size() >0) {
+					result +=  "Los procedimientos iguales son :\n";
 					for (Iterator iterator = proceduresIguales.iterator(); iterator.hasNext();) {
 						Procedure table = (Procedure) iterator.next();
 						result +=table.toString()+"\n";
@@ -223,7 +225,7 @@ public class Database {
 					}
 				}
 			} else {
-				result += "Ahora vamos a comparar las Procedimientos de ambas \n";
+				result += "Las dos BDs tienen la misma cantidad de procedimientos y funciones \n Ahora vamos a comparar las Procedimientos de ambas \n";
 				for (Iterator iterator = procedures.iterator(); iterator.hasNext();) {
 					Procedure procedure = (Procedure) iterator.next();
 					Procedure otherProcedure = other.getProcedure(procedure.getName());
@@ -231,12 +233,12 @@ public class Database {
 						result += "La BD1 posee procedimiento llamado "+ procedure.getName() +" Pero esa procedimiento no existe en la BD2 \n";
 					} else {
 						if (otherProcedure.getName().equals(procedure.getName())) {
-							result += "Ambas BDs tienen un procedimiento con el nombre : \n"+ procedure.getName();
-							result += "Veamos si ambos son iguales estructuralmente..\n";
+							result += "Ambas BDs tienen un procedimiento con el nombre : \n"+ procedure.getName() + "\n";
+							//result += "Veamos si ambos son iguales estructuralmente..\n";
 							if (!otherProcedure.equals(procedure)) {
 								result += otherProcedure.compare(procedure);
 							} else {
-								result += "Ambos son iguales estructuralmente con la siguiente: \n "
+								result += "Y Los procedimientos son iguales con la siguiente estructura \n "
 										+ "" + procedure.toString();
 							}
 						}	
@@ -247,9 +249,9 @@ public class Database {
 		}
 		
 		if (this.equals(other)) {
-			result += "En conclucion podemos decir que las base de datos son iguales por todo lo mencionado anteriormente \n";
+			result += "\nEn conclucion podemos decir que las base de datos son IGUALES por todo lo mencionado anteriormente \n";
 		} else {
-			result += "En conclucion podemos decir que las base de datos son distintas por todo lo mencionado anteriormente \n";
+			result += "\nEn conclucion podemos decir que las base de datos son DISTINTAS por todo lo mencionado anteriormente \n";
 
 		}
 		
