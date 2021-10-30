@@ -72,9 +72,25 @@ public class Index {
 
 	public String compare(Index index) {
 		String result = "";
+		if (this == index)
+			result += "Ambos indices son inguales ya que son el mismo indice.\n";
+		if (index == null)
+			result += "El indice con el que se desea comparar esta vacío.\n";
+		Index other = (Index) index;
+		if (column == null) {
+			if (other.column != null)
+				result += this.name + " no posee indices, mientras que "
+				          + other.name + " si posee indices.\n";
+		} else if (!column.equals(other.column))
+			result += "Los valores de los indices no son iguales.\n";
+		if (type == null) {
+			if (other.type != null)
+				result += this.name + " no tiene valores de tipo asignado a sus indies, "
+				         +other.name + " si tiene tipos, siendo estos primarios o secundarios.\n";
+		} else if (!type.equals(other.type))
+			result += "Los indices no son del mismo tipo.\n";
+		if (result == "")
+			result += "Los indices " + this.name + " y " + other.name + " son iguales.\n";
 		return result;
 	}
-	
-	
-	
 }
