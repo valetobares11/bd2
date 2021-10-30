@@ -64,6 +64,24 @@ public class Trigger {
 	public String compare(Trigger trigger) {
 		String result = "";
 		// TODO Auto-generated method stub
+		if (this == trigger)
+			result += "Ambos trigger son inguales ya que son el mismo trigger.\n";
+		if (trigger == null)
+			result += "El trigger con el que se desea comparar esta vacío.\n";
+		Trigger other = (Trigger) trigger;
+		if (name == null) {
+			if (other.name != null)
+				result += "El trigger desde el que se trata de hacer la comparacion no posee nombre.\n";
+		} else if (!name.equals(other.name)) {
+			result += this.name + " y " + other.name + " como se ve no tienen el mismo nombre.\n";
+		} else {
+			if (!(action.equals(other.getAction())))
+				result += this.name + " y " + other.name + " no generan la misma accion.\n";
+			if (!(shot.equals(other.getShot())))
+				result += this.name + " y " + other.name + " no generan la accion en el mismo momento.\n";
+		}
+		if (result == "")
+			result += "Los trigger " + this.name + " y " + other.name + " son iguales.\n";;
 		return result;
 	}
 	
