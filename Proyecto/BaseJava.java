@@ -106,30 +106,38 @@ public class BaseJava {
              columna.setType(colummType);
              table.addColumn(columna);
 		  }
-		  
-		 //ACA LLENAMOS LA TABBLAS CON LAS KEYS
+		//ACA LLENAMOS LA TABLAS CON LAS KEYS
 		  query= "select CONSTRAINT_NAME,CONSTRAINT_TYPE,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE NATURAL JOIN "
-		  		+ "information_schema.table_constraints where table_name = '"+nombreTable+"'";  
+		  		+ "information_schema.table_constraints where table_name = '"+nombreTable+"'";
 		  ResultSet result_key_table = connection.createStatement().executeQuery(query);
 		  while(result_key_table.next()){
-			 Key key = new Key();
-			 key.setKeyName(result_key_table.getString("CONSTRAINT_NAME"));
-			 if (result_key_table.getString("CONSTRAINT_TYPE").equals("FOREIGN KEY")) {
-				 key.setKeyType(2);
-				 key.setColumnAssoc(result_key_table.getString("COLUMN_NAME"));
-				 key.referenceTo(result_key_table.getString("REFERENCED_COLUMN_NAME"), result_key_table.getString("REFERENCED_TABLE_NAME"));
-	    		 	 
-	    	 }
-	    	 if (result_key_table.getString("CONSTRAINT_TYPE").equals("PRIMARY KEY")) {
-	    		 key.setKeyType(1);
-				 key.setColumnAssoc(result_key_table.getString("COLUMN_NAME"));
-	    	 }
-	    	 if (result_key_table.getString("CONSTRAINT_TYPE").equals("UNIQUE KEY")) {
-		    	 key.setKeyType(3); 
-		    	 key.setColumnAssoc(result_key_table.getString("COLUMN_NAME"));
-	    	 }	
-		  table.addKey(key);
+			 //Key key = new Key();
+			 Set<Key> keyColumns = new HashSet<>();
+			  String nombreKey = result_key_table.getString("CONSTRAINT_NAME");
+			  Key key = table.getKeyPorNombre(nombreKey);
+			  boolean yaCreada = false;
+			  if (key == null)
+				  key = new Key();
+			  else
+				  yaCreada = true;
+			  if (!yaCreada) {  
+				  key.setKeyName(result_key_table.getString("CONSTRAINT_NAME"));
+				  if (result_key_table.getString("CONSTRAINT_TYPE").equals("FOREIGN KEY")) {
+					  key.setKeyType(2);
+					  //key.setColumns(key.getColumns().add(new Column()));
+					  key.referenceTo(result_key_table.getString("REFERENCED_COLUMN_NAME"), result_key_table.getString("REFERENCED_TABLE_NAME"));
+	    		  }
+				  if (result_key_table.getString("CONSTRAINT_TYPE").equals("PRIMARY KEY")) {
+					  key.setKeyType(1);
+				  }
+				  if (result_key_table.getString("CONSTRAINT_TYPE").equals("UNIQUE KEY")) {
+					  key.setKeyType(3); 
+				  }
+			  }
+			  key.getColumns().add(table.getColumn(result_key_table.getString("COLUMN_NAME")));
+			  table.addKey(key);
 		  }
+	
 		  
 		  //ACA LLENAMOS LA TABLA CON SUS TRUGGERS
 		  query = "SELECT * FROM information_schema.TRIGGERS WHERE trigger_schema = '"+this.name_bd+"' "
