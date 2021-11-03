@@ -107,13 +107,45 @@ public class BaseJava {
              table.addColumn(columna);
 		  }
 		//ACA LLENAMOS LA TABLAS CON LAS KEYS
-		  query= "select CONSTRAINT_NAME,CONSTRAINT_TYPE,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE NATURAL JOIN "
+		  /**query= "select CONSTRAINT_NAME,CONSTRAINT_TYPE,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE NATURAL JOIN "
 		  		+ "information_schema.table_constraints where table_name = '"+nombreTable+"'";
-		  ResultSet result_key_table = connection.createStatement().executeQuery(query);
-		  while(result_key_table.next()){
+		  
+		  ResultSet PK = metaData.getPrimaryKeys(connection.getCatalog(), null, table.getName());
+		  ResultSet FK = metaData.getImportedKeys(connection.getCatalog(), null, table.getName());
+		  
+		  //ResultSet result_key_table = connection.createStatement().executeQuery(query);
+		  String nextValue = "";
+		  while(PK.next()) {
+			  String val1 = "";
+			  val1 = (String) PK.next();
+			  
+		  }
+		  
+		  while(FK.next()) {
+			  
+		  }
+		  //y dentro repites la operación
+		  
+		  
+		  String val2 = "";
+		  if (rs1.hasNext) {
+		  
+		  }
+		  if (rs2.hasNext) {
+		  val2 = (String) rs2.next();
+		  }
+		  nextValue = val1 + " - " + val2;
+		  ResultSet PK = connection.createStatement().executeQuery(nextValue);
+		  **/
+		  
+		 //PK significa primary key y FK foreign key
+		  ResultSet PK = metaData.getPrimaryKeys(connection.getCatalog(), null, table.getName());
+		  ResultSet FK = metaData.getImportedKeys(connection.getCatalog(), null, table.getName());
+		  
+		  while(PK.next()){
 			 //Key key = new Key();
 			 Set<Key> keyColumns = new HashSet<>();
-			  String nombreKey = result_key_table.getString("CONSTRAINT_NAME");
+			  String nombreKey = PK.getString("CONSTRAINT_NAME");
 			  Key key = table.getKeyPorNombre(nombreKey);
 			  boolean yaCreada = false;
 			  if (key == null)
@@ -121,25 +153,54 @@ public class BaseJava {
 			  else
 				  yaCreada = true;
 			  if (!yaCreada) {  
-				  key.setKeyName(result_key_table.getString("CONSTRAINT_NAME"));
-				  if (result_key_table.getString("CONSTRAINT_TYPE").equals("FOREIGN KEY")) {
+				  key.setKeyName(PK.getString("CONSTRAINT_NAME"));
+				  if (PK.getString("CONSTRAINT_TYPE").equals("FOREIGN KEY")) {
 					  key.setKeyType(2);
 					  //key.setColumns(key.getColumns().add(new Column()));
-					  key.referenceTo(result_key_table.getString("REFERENCED_COLUMN_NAME"), result_key_table.getString("REFERENCED_TABLE_NAME"));
+					  key.referenceTo(PK.getString("REFERENCED_COLUMN_NAME"), PK.getString("REFERENCED_TABLE_NAME"));
 	    		  }
-				  if (result_key_table.getString("CONSTRAINT_TYPE").equals("PRIMARY KEY")) {
+				  if (PK.getString("CONSTRAINT_TYPE").equals("PRIMARY KEY")) {
 					  key.setKeyType(1);
 				  }
-				  if (result_key_table.getString("CONSTRAINT_TYPE").equals("UNIQUE KEY")) {
+				  if (PK.getString("CONSTRAINT_TYPE").equals("UNIQUE KEY")) {
 					  key.setKeyType(3); 
 				  }
 			  }
-			  key.getColumns().add(table.getColumn(result_key_table.getString("COLUMN_NAME")));
+			  key.getColumns().add(table.getColumn(PK.getString("COLUMN_NAME")));
 			  table.addKey(key);
+		  
 		  }
+		  
+		  while(FK.next()){
+				 //Key key = new Key();
+				 Set<Key> keyColumns = new HashSet<>();
+				  String nombreKey = FK.getString("CONSTRAINT_NAME");
+				  Key key = table.getKeyPorNombre(nombreKey);
+				  boolean yaCreada = false;
+				  if (key == null)
+					  key = new Key();
+				  else
+					  yaCreada = true;
+				  if (!yaCreada) {  
+					  key.setKeyName(FK.getString("CONSTRAINT_NAME"));
+					  if (FK.getString("CONSTRAINT_TYPE").equals("FOREIGN KEY")) {
+						  key.setKeyType(2);
+						  //key.setColumns(key.getColumns().add(new Column()));
+						  key.referenceTo(FK.getString("REFERENCED_COLUMN_NAME"), FK.getString("REFERENCED_TABLE_NAME"));
+		    		  }
+					  if (FK.getString("CONSTRAINT_TYPE").equals("PRIMARY KEY")) {
+						  key.setKeyType(1);
+					  }
+					  if (FK.getString("CONSTRAINT_TYPE").equals("UNIQUE KEY")) {
+						  key.setKeyType(3); 
+					  }
+				  }
+				  key.getColumns().add(table.getColumn(PK.getString("COLUMN_NAME")));
+				  table.addKey(key);
+			  }
 	
 		  
-		  //ACA LLENAMOS LA TABLA CON SUS TRUGGERS
+		  //ACA LLENAMOS LA TABLA CON SUS TRIGGERS
 		  query = "SELECT * FROM information_schema.TRIGGERS WHERE trigger_schema = '"+this.name_bd+"' "
 		  		+ "AND EVENT_OBJECT_TABLE = '"+nombreTable+"'";
 		  ResultSet resutl_trigger_table = connection.createStatement().executeQuery(query);
@@ -150,9 +211,12 @@ public class BaseJava {
 		  }
 		  
 		  //ACA LLENAMOS LA TABLA CON LOS INDICES
+		  /**
 		  query = "select INDEX_NAME,column_name,index_type  from information_schema.statistics "
 		  		+ " WHERE TABLE_SCHEMA = '"+this.name_bd+"' and table_name ='"+nombreTable+"'";
 		  ResultSet resutl_index_table = connection.createStatement().executeQuery(query);
+		  **/
+		  ResultSet resutl_index_table = metaData.getIndexInfo(connection.getCatalog(), null, table.getName(), false, false);
 		  while(resutl_index_table.next()){
 			  Index index = new Index(resutl_index_table.getString("INDEX_NAME"),
 					  resutl_index_table.getString("index_type"),resutl_index_table.getString("column_name"));
