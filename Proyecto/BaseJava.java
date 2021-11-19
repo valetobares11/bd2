@@ -91,6 +91,8 @@ public class BaseJava {
 	  String nombreTable = INITIALIZATION_STRING;
 	  String colummName = INITIALIZATION_STRING;
 	  String colummType = INITIALIZATION_STRING;
+	  Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
+	  
 	  while(resultSetTables.next()) {
 		  nombreTable =resultSetTables.getString(3);
 		  Table table = new Table();
@@ -141,63 +143,22 @@ public class BaseJava {
 		 //PK significa primary key y FK foreign key
 		  ResultSet PK = metaData.getPrimaryKeys(connection.getCatalog(), null, table.getName());
 		  ResultSet FK = metaData.getImportedKeys(connection.getCatalog(), null, table.getName());
-		  
-		  while(PK.next()){
-			 //Key key = new Key();
-			 Set<Key> keyColumns = new HashSet<>();
-			  String nombreKey = PK.getString("CONSTRAINT_NAME");
-			  Key key = table.getKeyPorNombre(nombreKey);
-			  boolean yaCreada = false;
-			  if (key == null)
-				  key = new Key();
-			  else
-				  yaCreada = true;
-			  if (!yaCreada) {  
-				  key.setKeyName(PK.getString("CONSTRAINT_NAME"));
-				  if (PK.getString("CONSTRAINT_TYPE").equals("FOREIGN KEY")) {
-					  key.setKeyType(2);
-					  //key.setColumns(key.getColumns().add(new Column()));
-					  key.referenceTo(PK.getString("REFERENCED_COLUMN_NAME"), PK.getString("REFERENCED_TABLE_NAME"));
-	    		  }
-				  if (PK.getString("CONSTRAINT_TYPE").equals("PRIMARY KEY")) {
-					  key.setKeyType(1);
-				  }
-				  if (PK.getString("CONSTRAINT_TYPE").equals("UNIQUE KEY")) {
-					  key.setKeyType(3); 
-				  }
-			  }
-			  key.getColumns().add(table.getColumn(PK.getString("COLUMN_NAME")));
-			  table.addKey(key);
-		  
-		  }
-		  
-		  while(FK.next()){
-				 //Key key = new Key();
-				 Set<Key> keyColumns = new HashSet<>();
-				  String nombreKey = FK.getString("CONSTRAINT_NAME");
-				  Key key = table.getKeyPorNombre(nombreKey);
-				  boolean yaCreada = false;
-				  if (key == null)
-					  key = new Key();
-				  else
-					  yaCreada = true;
-				  if (!yaCreada) {  
-					  key.setKeyName(FK.getString("CONSTRAINT_NAME"));
-					  if (FK.getString("CONSTRAINT_TYPE").equals("FOREIGN KEY")) {
-						  key.setKeyType(2);
-						  //key.setColumns(key.getColumns().add(new Column()));
-						  key.referenceTo(FK.getString("REFERENCED_COLUMN_NAME"), FK.getString("REFERENCED_TABLE_NAME"));
-		    		  }
-					  if (FK.getString("CONSTRAINT_TYPE").equals("PRIMARY KEY")) {
-						  key.setKeyType(1);
-					  }
-					  if (FK.getString("CONSTRAINT_TYPE").equals("UNIQUE KEY")) {
-						  key.setKeyType(3); 
-					  }
-				  }
-				  key.getColumns().add(table.getColumn(PK.getString("COLUMN_NAME")));
-				  table.addKey(key);
-			  }
+		  Key k = null;
+		  while (PK.next()) {
+				k = new Key();
+				k.setKeyType(1);
+				k.setKeyName(PK.getString("PK_NAME"));
+				k.setSeqNumber(PK.getInt("KEY_SEQ"));
+				table.addKey(k);
+			}
+			while (FK.next()) {
+				k = new Key();
+				k.setKeyType(2);
+				k.setKeyName(FK.getString("FK_NAME"));
+				// de que tabla y columna es importada
+				k.referenceTo(FK.getString("PKCOLUMN_NAME"), FK.getString("PKTABLE_NAME"));
+				table.addKey(k);
+			}
 	
 		  
 		  //ACA LLENAMOS LA TABLA CON SUS TRIGGERS
@@ -217,22 +178,36 @@ public class BaseJava {
 		  ResultSet resutl_index_table = connection.createStatement().executeQuery(query);
 		  **/
 		  ResultSet resutl_index_table = metaData.getIndexInfo(connection.getCatalog(), null, table.getName(), false, false);
-		  while(resutl_index_table.next()){
-			  Index index = new Index(resutl_index_table.getString("INDEX_NAME"),
-					  resutl_index_table.getString("index_type"),resutl_index_table.getString("column_name"));
-			  table.addIndex(index);
-		  }
+		  Index index = new Index();
+		  while (resutl_index_table.next()) {
+				if (!resutl_index_table.getString("COLUMN_NAME").equals("null")) {
+					index = new Index(resutl_index_table.getString("INDEX_NAME"),
+							          resutl_index_table.getString("column_name"));
+					table.addIndex(index);
+				}
+			}
 		  
 		  database.addTable(table);
 	  }
 	  
-	  Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
+	  //Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
 
 	 
 	  //ACA LLENAMOS LOS PROCEDURE/FUNCTIONS DE LA BD
 	  ResultSet resultSetProcedure = metaData.getProcedures(connection.getCatalog(), null, null);
 	  Procedure procedure;
-	 
+	  
+	  while (tr.next()) {
+			procedure = new Procedure(tr.getString("PROCEDURE_NAME"),tr.getString("PROCEDURE_TYPE"));
+			ResultSet pp = metaData.getProcedureColumns(connection.getCatalog(), connection.getSchema(), aux.getName(), null);
+			List<String[]> l = procedure.getParameters();
+			while (pp.next()) {
+				l.add(new String[]{pp.getString("COLUMN_NAME"),pp.getString("COLUMN_TYPE")});
+			}
+			p.add(procedure);
+		}
+	  
+	  
 		while (resultSetProcedure.next()) {
 			int typeName = Integer.valueOf(resultSetProcedure.getString("PROCEDURE_TYPE")).intValue();
 			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"), jdbcMappings.get(typeName));
