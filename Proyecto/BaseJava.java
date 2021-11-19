@@ -196,18 +196,6 @@ public class BaseJava {
 	  //ACA LLENAMOS LOS PROCEDURE/FUNCTIONS DE LA BD
 	  ResultSet resultSetProcedure = metaData.getProcedures(connection.getCatalog(), null, null);
 	  Procedure procedure;
-	  
-	  while (tr.next()) {
-			procedure = new Procedure(tr.getString("PROCEDURE_NAME"),tr.getString("PROCEDURE_TYPE"));
-			ResultSet pp = metaData.getProcedureColumns(connection.getCatalog(), connection.getSchema(), aux.getName(), null);
-			List<String[]> l = procedure.getParameters();
-			while (pp.next()) {
-				l.add(new String[]{pp.getString("COLUMN_NAME"),pp.getString("COLUMN_TYPE")});
-			}
-			p.add(procedure);
-		}
-	  
-	  
 		while (resultSetProcedure.next()) {
 			int typeName = Integer.valueOf(resultSetProcedure.getString("PROCEDURE_TYPE")).intValue();
 			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"), jdbcMappings.get(typeName));
