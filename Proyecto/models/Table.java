@@ -27,7 +27,12 @@ public class Table {
 	}
 
 	public Column getColumn(String name) {
-		return columns.stream().filter((x) -> x.getName().equals(name)).findFirst().get();
+		for (Iterator<Column> iterator = columns.iterator(); iterator.hasNext();) {
+			Column columna = (Column) iterator.next();
+			if (columna.getName().equals(name))
+				return columna;
+		}
+		return null;
 	}
 	
 	public Set<Index> getIndexs() {
@@ -39,7 +44,12 @@ public class Table {
 	}
 
 	public Trigger getTrigger(String name) {
-		return triggers.stream().filter((x) -> x.getName().equals(name)).findFirst().get();
+		for (Iterator<Trigger> iterator = triggers.iterator(); iterator.hasNext();) {
+			Trigger columna = (Trigger) iterator.next();
+			if (columna.getName().equals(name))
+				return columna;
+		}
+		return null;
 	}
 
 	public Set<Trigger> getTriggers() {
@@ -69,12 +79,20 @@ public class Table {
 
 
 	public Key getKey(Key key) {
-		Optional<Key> o = keys.stream().filter(x -> x.equals(key)).findAny();
-		return o.isPresent()? o.get(): null;
+		for (Iterator<Key> iterator = keys.iterator(); iterator.hasNext();) {
+			Key key2 = (Key) iterator.next();
+			if (key2.equals(key))
+				return key2;
+		}
+		return null;
 	}
 	public Index getIndex(Index index) {
-		Optional<Index> o = indexs.stream().filter(x -> x.equals(index)).findAny();
-		return o.isPresent()? o.get(): null;
+		for (Iterator<Index> iterator = indexs.iterator(); iterator.hasNext();) {
+			Index columna = (Index) iterator.next();
+			if (columna.equals(index))
+				return columna;
+		}
+		return null;
 	}
 
 	public Set<Key> getPrimaryKeys() {
@@ -226,14 +244,12 @@ public class Table {
 				result +=  "Ahora veamos sus columnas \n"; 
 				Column column = null;
 				Column columnOther = null;
-				boolean banderaColumn = false;
 				for (Iterator iterator = columns.iterator(); iterator.hasNext();) {
 					 column = (Column) iterator.next();
 					 columnOther = other.getColumn(column.getName());
 					if(columnOther==null) {
 						result += "La BD1 con tabla "+ this.getName() +"Posee una Columna llamada "+ column.getName() + "\n"
 								+ "Pero la BD2 con esta tabla no posee esta columna \n";
-						banderaColumn = true;
 					} else {
 						if (columnOther.getName().equals(column.getName())) {
 							result += "Ambas BDs con la tabla : "+ this.getName() + " poseen una columna llamada "+ column.getName() +"\n";
@@ -247,15 +263,13 @@ public class Table {
 						
 					}
 				}
-				if (banderaColumn) {
-					for (Iterator iterator = other.getColumns().iterator(); iterator.hasNext();) {
-						 column = (Column) iterator.next();
-						 columnOther = this.getColumn(column.getName());
-						 if(columnOther==null) {
-								result += "La BD2 con tabla "+ this.getName() +"Posee una Columna llamada "+ column.getName() + "\n"
-										+ "Pero la BD1 con esta tabla no posee esta columna \n";
-						 }		
-					}
+				for (Iterator iterator = other.getColumns().iterator(); iterator.hasNext();) {
+					column = (Column) iterator.next();
+					columnOther = this.getColumn(column.getName());
+					if(columnOther==null) {
+						result += "La BD2 con tabla "+ this.getName() +"Posee una Columna llamada "+ column.getName() + "\n"
+								+ "Pero la BD1 con esta tabla no posee esta columna \n";
+					}		
 				}
 				/*Set<Column> columnasIguales = new HashSet<Column>();
 				Set<Column> columnasbd1 = new HashSet<Column>();
@@ -304,21 +318,21 @@ public class Table {
 			result += "Ahora comparemos entre los triggers de ambas tablas \n";
 			
 			if (triggers.size() == 0 &&  other.getTriggers().size()!=0) {
-				result += "La BD1 con tabla "+this.name+" no poseen triggers y la BD2 con la misma tabla si posee y son :\n";
+				result += "La BD1 con tabla "+this.name+" no posee triggers y la BD2 con la misma tabla si posee y son :\n";
 				Trigger trigger = null;
 				for (Iterator iterator =  other.getTriggers().iterator(); iterator.hasNext();) {
 					trigger = (Trigger) iterator.next();
 					result+= trigger.toString()+"\n";
 				}
 			} else if (triggers.size() != 0 &&  other.getTriggers().size()==0) {
-				result += "La BD2 con tabla "+this.name+" no poseen triggers y la BD1 con la misma tabla si posee y son :\n";
+				result += "La BD2 con tabla "+this.name+" no posee triggers y la BD1 con la misma tabla si posee y son :\n";
 				Trigger trigger = null;
 				for (Iterator iterator =  triggers.iterator(); iterator.hasNext();) {
 					trigger = (Trigger) iterator.next();
 					result+= trigger.toString()+"\n";
 				}
 			} else if (triggers.size() == 0 &&  other.getTriggers().size()==0) {
-				result += "ninguna de las BDs con tabla "+this.name+" No posee tablas\n";
+				result += "ninguna de las BDs con tabla "+this.name+" poseen triggers \n";
 			} else {
 				if (triggers.size() != other.getTriggers().size()) {
 					result += " Las tablas poseen distintas cantidad de triggers \n"; 
@@ -335,7 +349,6 @@ public class Table {
 				result+= "Ahora veamos sus triggers \n"; 
 				Trigger trigger = null;
 				Trigger otherTrigger = null;
-				boolean banderaTrigger = false;
 				for (Iterator iterator = triggers.iterator(); iterator.hasNext();) {
 				    trigger = (Trigger) iterator.next();
 				    otherTrigger = other.getTrigger(trigger.getName());
@@ -355,7 +368,6 @@ public class Table {
 						
 					}
 				}
-				if (banderaTrigger) {
 					for (Iterator iterator = other.getTriggers().iterator(); iterator.hasNext();) {
 					    trigger = (Trigger) iterator.next();
 					    otherTrigger = this.getTrigger(trigger.getName());
@@ -364,7 +376,6 @@ public class Table {
 									+ "Pero la BD1 con esta tabla no posee este trigger \n";
 						}
 					}	
-				}
 			}
 			
 			
@@ -489,7 +500,6 @@ public class Table {
 					result+= "Ahora veamos sus indices \n"; 
 					Index index = null;
 					Index otherIndex = null;
-					boolean banderaIndex = false;
 					for (Iterator iterator = indexs.iterator(); iterator.hasNext();) {
 						index = (Index) iterator.next();
 						 otherIndex = other.getIndex(index);
@@ -497,7 +507,6 @@ public class Table {
 							result += "La BD1 con tabla "+ this.getName() +" Posee un Index llamado "+ index.getName() + ""
 									+ " que esta asociado a la columna "+index.getColumn()+" "
 									+ "Pero la BD2 con esta tabla no posee este index \n";
-							banderaIndex = true;
 						} else {
 							if (otherIndex.getName().equals(index.getName())) {
 								result += "Ambas BDs con tabla : "+ this.getName() + " Poseen un index llamado "+ index.getName() ;
@@ -511,7 +520,6 @@ public class Table {
 							
 						}
 					}	
-					if (banderaIndex) {
 						for (Iterator iterator2 = other.getIndexs().iterator(); iterator2.hasNext();) {
 							index = (Index) iterator2.next();
 							 otherIndex = getIndex(index);
@@ -519,10 +527,8 @@ public class Table {
 								result += "En cambio la BD2 con tabla "+ this.getName() +" Posee un Index llamado "+ index.getName() + ""
 										+ " que esta asociado a la columna "+index.getColumn()+" "
 										+ "Que la BD1 con esta tabla no posee. \n";
-								banderaIndex = true;
 							}
 						}
-					}
 			}
 			
 			
@@ -563,7 +569,6 @@ public class Table {
 						result+= "Ahora veamos sus Claves primarias \n"; 
 				Key key =null;
 				Key otherKey = null;
-				boolean banderaKey = false;
 				
 				for (Iterator<Key> iterator = primaryKeys.iterator(); iterator.hasNext();) {
 					key = (Key) iterator.next();
@@ -575,15 +580,17 @@ public class Table {
 							} else {
 								result += "a las columnas "+ key.getColumns().toString();
 							}
-							result+= "Pero la BD2 con esta tabla No posee una key similar con la misma estructura \n";
-							banderaKey = true;
+							result+= "Pero la BD2 con esta tabla No posee una key con la misma estructura \n";
+							for (Iterator<Key> iterator2 = otherPrimaryKeys.iterator(); iterator.hasNext();) {
+								otherKey = (Key) iterator2.next();
+								result += key.compare(otherKey);
+							}
 						} else {
 							result += "Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key "+ key.getKeyName()+ ""
 									+ " de la BD1 con esta tabla \n"+ key.toString() +" \n"
 									+ " Y la clave "+ otherKey.getKeyName()+ " de la BD2 con la misma tabla \n"+otherKey.toString() + "\n";
 						}
 				}
-				if (banderaKey) {
 					for (Iterator<Key> iterator2 = otherPrimaryKeys.iterator(); iterator2.hasNext();) {
 						key = (Key) iterator2.next();
 						if (key != null) {	
@@ -600,7 +607,6 @@ public class Table {
 						}
 					
 					}
-				}
 			}
 		
 			
@@ -685,21 +691,23 @@ public class Table {
 					result+= "Ahora veamos sus Claves secundarias \n"; 
 					Key key = null;
 					Key otherKey = null;
-					boolean banderaKey = false;
 					for (Iterator<Key> iterator = uniqueKeys.iterator(); iterator.hasNext();) {
 					    key = (Key) iterator.next();
 					    otherKey = other.getKey(key);
 						if(otherKey == null) {
 							result += "La BD1 con tabla "+ this.getName() +" Posee una clave secundaria llamada "+ key.getKeyName() + ""
-									+ "Pero la BD2 con esta tabla No posee una key similar con la misma estructura \n";
-							banderaKey = true;
+									+ "Pero la BD2 con esta tabla No posee una key exactamente igual \n";
+							result += "procedemos a comparar esta clave con las otras \n";
+							for (Iterator<Key> iterator2 = otherUniqueKeys.iterator(); iterator.hasNext();) {
+								otherKey = (Key) iterator2.next();
+								result += key.compare(otherKey);
+							}
 						} else {
 							result += "Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key "+ key.getKeyName()+ ""
 									+ " de la BD1 con esta tabla \n"+ key.toString() +" \n"
 									+ " Y la clave "+ otherKey.getKeyName()+ " de la BD2 con la misma tabla \n"+otherKey.toString() + "\n";
 						}	
 					}
-					if (banderaKey) {
 						for (Iterator<Key> iterator = otherUniqueKeys.iterator(); iterator.hasNext();) {
 						  	key = (Key) iterator.next();
 						    otherKey = getKey(key);
@@ -708,7 +716,6 @@ public class Table {
 										+ "Pero la BD1 con esta tabla No posee una key similar con la misma estructura \n";
 							}
 						}
-					}
 					
 			}
 			
@@ -793,21 +800,22 @@ public class Table {
 				result+= "Ahora veamos sus claves foraneas \n"; 
 				Key key  = null;
 				Key otherKey = null;
-				boolean banderaKey = false;
 				for (Iterator<Key> iterator = foreignKeys.iterator(); iterator.hasNext();) {
 					key = (Key) iterator.next();
 					otherKey = other.getKey(key);
 					if(otherKey == null) {
 						result += "La BD1 con tabla "+ this.getName() +" Posee una clave foranea llamada "+ key.getKeyName() + ""
 								+ "Pero la BD2 con esta tabla No posee una key similar con la misma estructura \n";
-						banderaKey = true;
+						for (Iterator<Key> iterator2 = otherForeignKeys.iterator(); iterator.hasNext();) {
+							otherKey =  (Key) iterator2.next();
+							key.compare(otherKey);
+						}
 					} else {
 						result += "Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key "+ key.getKeyName()+ ""
 								+ " de la BD1 con esta tabla \n"+ key.toString() +" \n"
 								+ " Y la clave "+ otherKey.getKeyName()+ " de la BD2 con la misma tabla \n"+otherKey.toString() + "\n";
 						}	
 					}
-				if (banderaKey) {
 					for (Iterator<Key> iterator2 = otherForeignKeys.iterator(); iterator2.hasNext();) {
 						key = (Key) iterator2.next();
 						otherKey = this.getKey(key);
@@ -816,7 +824,6 @@ public class Table {
 										+ "Pero la BD1 con esta tabla No posee una key similar con la misma estructura \n";
 						}
 					}	
-				}
 			}
 			
 			
@@ -869,6 +876,7 @@ public class Table {
 				
 		return result;
 	}
+	
 	
 	
 }
