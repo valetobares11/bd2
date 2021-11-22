@@ -238,7 +238,6 @@ public class BaseJava {
 			
 			/*int typeName = Integer.valueOf(resultSetProcedure.getString("PROCEDURE_TYPE")).intValue();
 			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"), jdbcMappings.get(typeName));*/
-
 			ResultSet pp = metaData.getProcedureColumns(connection.getCatalog(), connection.getSchema(), procedure.getName(), null);
 			List<String[]> l = procedure.getParameters();
 			while (pp.next()) {
