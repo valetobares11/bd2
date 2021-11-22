@@ -65,6 +65,7 @@ public class Database {
 		if (!(obj instanceof Database))
 			return false;
 		Database other = (Database) obj;
+		//EL NOMBRE NO ES CONDICION PARA EVALUAR
 		/*if (name == null) {
 			if (other.name != null)
 				return false;
@@ -138,6 +139,7 @@ public class Database {
 			Table table = null;
 			Table otherTable = null;
 			for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
+				result +="\n\n";
 				table = (Table) iterator.next();
 			    otherTable = other.getTable(table.getName());
 				if(otherTable==null) {
@@ -154,159 +156,77 @@ public class Database {
 					}	
 				}
 			}
-		}
 			
-			
-				/*Set<Table> tablasIguales = new HashSet<Table>();
-				Set<Table> tablasbd1 = new HashSet<Table>();
-				Set<Table> tablasbd2 = new HashSet<Table>();
-				
-				for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
-					Table table = (Table) iterator.next();
-					Table table2 = other.getTable(table.getName());
-					if (table2!=null && !table.equals(table2)) {
-						tablasbd1.add(table);
-					} else {
-						tablasIguales.add(table);
-					}
-				}
-				for (Iterator iterator = other.getTables().iterator(); iterator.hasNext();) {
-					Table table = (Table) iterator.next();
-					Table table2 = this.getTable(table.getName());
-					if (table2!=null && !table.equals(table2)) {
-						tablasbd2.add(table);
-					} 
-				}
-				
-				result += "Por lo tanto las  dos Base de Datos son distintas, a continuacion mostramos las tablas equivalentes y diferentes\n";
-					
-				if (tablasIguales.size() >0) {
-					result += "Las tablas iguales son :\n";
-					for (Iterator iterator = tablasIguales.iterator(); iterator.hasNext();) {
-						Table table = (Table) iterator.next();
-						result +=table.toString()+"\n";
-					}
-				}
-				if (tablasbd1.size() >0) {
-					result+= "Las tablas de la BD1 diferentes de la BD2 son :";
-					for (Iterator iterator = tablasbd1.iterator(); iterator.hasNext();) {
-						Table table = (Table) iterator.next();
-						result += table.toString()+"\n";
-					}
-				}
-				if (tablasbd2.size() >0) {
-					result+= "Las tablas de la BD2 diferentes de la BD1 son :";
-					for (Iterator iterator = tablasbd2.iterator(); iterator.hasNext();) {
-						Table table = (Table) iterator.next();
-						result += table.toString()+"\n";
-					}
-				}*/
-				
-		
-				
-				
-			
-			
-			result += "\n\nSeguimos comparando los procedimientos/funciones de ambas BD (aclaramos que cuando"
-					+ " hacemos referecia a los procedimientos tambien incluimos a las funciones)\n";
-			
-			if (procedures.size() == 0 &&  other.getProcedures().size()!=0) {
-				result += "La BD1 no poseen procedeimientos y la BD2 si posee y son :\n";
-				Procedure procedure = null;
-				for (Iterator iterator = other.getProcedures().iterator(); iterator.hasNext();) {
-					procedure = (Procedure) iterator.next();
-					result+= procedure.toString()+"\n";
-				}
-			} else if (procedures.size() != 0 &&  other.getProcedures().size()==0) {
-				result += "La BD2 no poseen procedeimientos y la BD1 si posee y son :\n";
-				Procedure procedure = null;
-				for (Iterator iterator = procedures.iterator(); iterator.hasNext();) {
-					procedure = (Procedure) iterator.next();
-					result+= procedure.toString()+"\n";
-				}
-			} else if (procedures.size() == 0 &&  other.getProcedures().size()==0) {
-				result += "ninguna de las BDs posee procedimientos almacenados\n";
-			}else {
-				if (procedures.size() != other.getProcedures().size()) {
-					result += "El tamaño de los procedimientos/funciones es distinto ... \n";
-					if (procedures.size() > other.getProcedures().size()) {
-						result += "El tamaño de la BD1 de procedimientos es Mayor que la BD2 ya que posee "+procedures.size()+
-								" mientras que la BD2 tiene "+other.getProcedures().size()+" \n";
-					} else {
-						result += "El tamaño de la BD2 de procedimientos es Mayor que la BD1 ya que posee "+other.getProcedures().size()+
-								" mientras que la BD1 tiene "+procedures.size()+" \n";
-					}
-					result += "ahora vamos a comparar los precedimientos de ambas\n";
-				} else {
-					result += "Las dos BDs tienen la misma cantidad de procedimientos \n Ahora vamos a comparar las Procedimientos de ambas \n";
-				}	
-					
-					for (Iterator iterator = procedures.iterator(); iterator.hasNext();) {
-						Procedure procedure = (Procedure) iterator.next();
-						Procedure otherProcedure = other.getProcedure(procedure.getName());
-						if(otherProcedure==null) {
-							result += "La BD1 posee procedimiento llamado "+ procedure.getName() +" Pero esa procedimiento no existe en la BD2 \n";
-						} else {
-							if (otherProcedure.getName().equals(procedure.getName())) {
-								result += "Ambas BDs tienen un procedimiento con el nombre : \n"+ procedure.getName() + "\n";
-								if (!otherProcedure.equals(procedure)) {
-									result += otherProcedure.compare(procedure);
-								} else {
-									result += "Y Los procedimientos son iguales con la siguiente estructura \n "
-											+ "" + procedure.toString();
-								}
-							}	
-						}
-					}
-				
-			}
-			
-			/*Set<Procedure> proceduresIguales = new HashSet<Procedure>();
-			Set<Procedure> proceduresbd1 = new HashSet<Procedure>();
-			Set<Procedure> proceduresbd2 = new HashSet<Procedure>();
-			
-			for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
-				Procedure table = (Procedure) iterator.next();
-				Procedure table2 = other.getProcedure(table.getName());
-				if (table2!=null && !table.equals(table2)) {
-					proceduresbd1.add(table);
-				} else {
-					proceduresIguales.add(table);
-				}
-			}
-			for (Iterator iterator = other.getProcedures().iterator(); iterator.hasNext();) {
-				Procedure table = (Procedure) iterator.next();
-				Procedure table2 = this.getProcedure(table.getName());
-				if (table2!=null && !table.equals(table2)) {
-					proceduresbd2.add(table);
+			for (Iterator iterator = other.getTables().iterator(); iterator.hasNext();) {
+				table = (Table) iterator.next();
+			    otherTable = this.getTable(table.getName());
+				if(otherTable==null) {
+					result += "La BD2 posee una tabla llamada "+ table.getName() +" Pero esa tabla en la BD1 no existe\n";
 				} 
 			}
-			
-			result += "Por lo tanto las  dos Base de Datos son distintas a continuacion mostramos los procedimientos equivalentes y diferentes\n";
-			if (proceduresIguales.size() >0) {
-				result +=  "Los procedimientos iguales son :\n";
-				for (Iterator iterator = proceduresIguales.iterator(); iterator.hasNext();) {
-					Procedure table = (Procedure) iterator.next();
-					result +=table.toString()+"\n";
-				}
-			}
-			if (proceduresbd1.size() >0) {
-				result+= "Los procedimientos de la BD1 diferentes de la BD2 son :";
-				for (Iterator iterator = proceduresbd1.iterator(); iterator.hasNext();) {
-					Procedure table = (Procedure) iterator.next();
-					result += table.toString()+"\n";
-				}
-			}
-			if (proceduresbd2.size() >0) {
-				result+= "Los procedimientos de la BD2 diferentes de la BD1 son :";
-				for (Iterator iterator = proceduresbd2.iterator(); iterator.hasNext();) {
-					Procedure table = (Procedure) iterator.next();
-					result += table.toString()+"\n";
-				}
-			}*/
-		//} else {
-			
+		}	
+		result +="\n\n";	
+		result += "\n\nSeguimos comparando los procedimientos/funciones de ambas BD (aclaramos que cuando"
+				+ " hacemos referecia a los procedimientos tambien incluimos a las funciones)\n";
 		
+		if (procedures.size() == 0 &&  other.getProcedures().size()!=0) {
+			result += "La BD1 no poseen procedeimientos y la BD2 si posee y son :\n";
+			Procedure procedure = null;
+			for (Iterator iterator = other.getProcedures().iterator(); iterator.hasNext();) {
+				procedure = (Procedure) iterator.next();
+				result+= procedure.toString()+"\n";
+			}
+		} else if (procedures.size() != 0 &&  other.getProcedures().size()==0) {
+			result += "La BD2 no poseen procedeimientos y la BD1 si posee y son :\n";
+			Procedure procedure = null;
+			for (Iterator iterator = procedures.iterator(); iterator.hasNext();) {
+				procedure = (Procedure) iterator.next();
+				result+= procedure.toString()+"\n";
+			}
+		} else if (procedures.size() == 0 &&  other.getProcedures().size()==0) {
+			result += "ninguna de las BDs posee procedimientos almacenados\n";
+		}else {
+			if (procedures.size() != other.getProcedures().size()) {
+				result += "El tamaño de los procedimientos/funciones es distinto ... \n";
+				if (procedures.size() > other.getProcedures().size()) {
+					result += "El tamaño de la BD1 de procedimientos es Mayor que la BD2 ya que posee "+procedures.size()+
+							" mientras que la BD2 tiene "+other.getProcedures().size()+" \n";
+				} else {
+					result += "El tamaño de la BD2 de procedimientos es Mayor que la BD1 ya que posee "+other.getProcedures().size()+
+							" mientras que la BD1 tiene "+procedures.size()+" \n";
+				}
+				result += "ahora vamos a comparar los precedimientos de ambas\n";
+			} else {
+				result += "Las dos BDs tienen la misma cantidad de procedimientos \n Ahora vamos a comparar las Procedimientos de ambas \n";
+			}	
+				Procedure procedure  =null;
+				Procedure otherProcedure = null;
+				for (Iterator iterator = procedures.iterator(); iterator.hasNext();) {
+					 procedure = (Procedure) iterator.next();
+					 otherProcedure = other.getProcedure(procedure.getName());
+					if(otherProcedure==null) {
+						result += "La BD1 posee procedimiento llamado "+ procedure.getName() +" Pero esa procedimiento no existe en la BD2 \n";
+					} else {
+						if (otherProcedure.getName().equals(procedure.getName())) {
+							result += "Ambas BDs tienen un procedimiento con el nombre : \n"+ procedure.getName() + "\n";
+							if (!otherProcedure.equals(procedure)) {
+								result += otherProcedure.compare(procedure);
+							} else {
+								result += "Y Los procedimientos son iguales con la siguiente estructura \n "
+										+ "" + procedure.toString();
+							}
+						}	
+					}
+				}
+				for (Iterator iterator2 = other.getProcedures().iterator(); iterator2.hasNext();) {
+					 procedure = (Procedure) iterator2.next();
+					 otherProcedure = this.getProcedure(procedure.getName());
+					if(otherProcedure==null) {
+						result += "La BD2 posee procedimiento llamado "+ procedure.getName() +" Pero esa procedimiento no existe en la BD1 \n";
+					}
+				}
+		}
+		result +="\n\n";
 		if (this.equals(other)) {
 			result += "\nEn conclucion podemos decir que las base de datos son IGUALES por todo lo mencionado anteriormente \n";
 		} else {

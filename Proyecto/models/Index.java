@@ -49,8 +49,6 @@ public class Index {
 		if (getClass() != obj.getClass())
 			return false;
 		Index other = (Index) obj;
-		System.out.println(column);
-		System.out.println(other.getColumn());
 		if (column == null) {
 			if (other.column != null)
 				return false;
