@@ -162,7 +162,7 @@ public class Table {
 			} else {
 				for (Iterator iterator = indexs.iterator(); iterator.hasNext();) {
 					Index index = (Index) iterator.next();
-					if(other.getIndex(index)!= null && !other.getIndex(index).equals(index)) {
+					if(other.getIndex(index)== null ) {
 						return false;
 					}
 				}
