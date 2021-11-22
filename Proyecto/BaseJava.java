@@ -101,7 +101,7 @@ public class BaseJava {
 		  table.setName(nombreTable);
 		  
 		  //ACA LLENAMOS LAS COLUMNAS DE LAS TABLAS
-		  ResultSet result_columns_table = metaData.getColumns(null,null, nombreTable, null);
+		  ResultSet result_columns_table = metaData.getColumns(this.name_bd,null, nombreTable, null);
 		  while (result_columns_table.next()) {
 	    	 Column columna = new Column();
              colummName = result_columns_table.getString("COLUMN_NAME");
@@ -183,6 +183,7 @@ public class BaseJava {
 				column = new Column();
 				k.setKeyType(1);
 				column.setName(PK.getString("COLUMN_NAME"));
+				column.setType(table.getColumn(column.getName()).getType());
 				k.setColumn(column);
 				k.setKeyName(PK.getString("PK_NAME"));
 				k.setSeqNumber(PK.getInt("KEY_SEQ"));
@@ -195,6 +196,7 @@ public class BaseJava {
 				k.setKeyType(2);
 				column = new Column();
 				column.setName(FK.getString("FKCOLUMN_NAME"));
+				column.setType(table.getColumn(column.getName()).getType());
 				k.setColumn(column);
 				k.setKeyName(FK.getString("FK_NAME"));
 				// de que tabla y columna es importada
@@ -270,5 +272,5 @@ public class BaseJava {
       }
       return result;
   }
-
+  
 }

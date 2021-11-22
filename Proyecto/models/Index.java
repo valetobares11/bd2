@@ -42,17 +42,19 @@ public class Index {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) 
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		Index other = (Index) obj;
+		System.out.println(column);
+		System.out.println(other.getColumn());
 		if (column == null) {
 			if (other.column != null)
 				return false;
-		} else if (!column.equals(other.column))
+		} else if (!column.equals(other.column)) 
 			return false;
 		return true;
 	}

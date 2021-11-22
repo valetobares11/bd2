@@ -29,12 +29,21 @@ public class Database {
 	}
 
 	public Table getTable(String name) {
-		return tables.stream().filter((x) -> x.getName().equals(name)).findFirst().get();
+		for (Iterator<Table> iterator = tables.iterator(); iterator.hasNext();) {
+			Table tabla = (Table) iterator.next();
+			if (tabla.getName().equals(name))
+				return tabla;
+		}
+		return null;
 	}
 
 	public Procedure getProcedure(String name) {
-		Optional<Procedure> op = procedures.stream().filter((x) -> x.getName().equals(name)).findFirst();
-		return op.isPresent() ? op.get() : null;
+		for (Iterator<Procedure> iterator = procedures.iterator(); iterator.hasNext();) {
+			Procedure columna = (Procedure) iterator.next();
+			if (columna.getName().equals(name))
+				return columna;
+		}
+		return null;
 	}
 
 	public boolean addTable(Table table) {
