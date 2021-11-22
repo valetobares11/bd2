@@ -93,6 +93,8 @@ public class BaseJava {
 	  String nombreTable = INITIALIZATION_STRING;
 	  String colummName = INITIALIZATION_STRING;
 	  String colummType = INITIALIZATION_STRING;
+	  Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
+	  
 	  while(resultSetTables.next()) {
 		  nombreTable =resultSetTables.getString(3);
 		  Table table = new Table();
@@ -141,6 +143,7 @@ public class BaseJava {
 		  **/
 		  
 		 //PK significa primary key y FK foreign key
+
 		  ResultSet PK = metaData.getPrimaryKeys(connection.getCatalog(), this.name_bd, table.getName());
 		  ResultSet FK = metaData.getImportedKeys(connection.getCatalog(), this.name_bd, table.getName());
 	
@@ -185,6 +188,7 @@ public class BaseJava {
 				k.setSeqNumber(PK.getInt("KEY_SEQ"));
 				table.addKey(k);
 			}
+
 			
 			while (FK.next()) {
 				k = new Key();
@@ -197,8 +201,7 @@ public class BaseJava {
 				k.referenceTo(FK.getString("PKCOLUMN_NAME"), FK.getString("PKTABLE_NAME"));
 				table.addKey(k);
 			}
-			
-		
+
 		  //ACA LLENAMOS LA TABLA CON SUS TRIGGERS
 		  query = "SELECT * FROM information_schema.TRIGGERS WHERE trigger_schema = '"+this.name_bd+"' "
 		  		+ "AND EVENT_OBJECT_TABLE = '"+nombreTable+"'";
@@ -211,6 +214,7 @@ public class BaseJava {
 		  
 		  //ACA LLENAMOS LA TABLA CON LOS INDICES
 		  ResultSet resutl_index_table = metaData.getIndexInfo(connection.getCatalog(), null, table.getName(), false, false);
+
 		  Index index =null;
 		  while(resutl_index_table.next()){
 			  if (!resutl_index_table.getString("COLUMN_NAME").equals("null")) {
@@ -219,11 +223,10 @@ public class BaseJava {
 			  }
 			  
 		  }
-
 		  database.addTable(table);
 	  }
 	  
-	  Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
+	  //Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
 
 	 
 	  //ACA LLENAMOS LOS PROCEDURE/FUNCTIONS DE LA BD
@@ -232,6 +235,10 @@ public class BaseJava {
 	 
 	  while (resultSetProcedure.next()) {
 			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"),resultSetProcedure.getString("PROCEDURE_TYPE"));
+			
+			/*int typeName = Integer.valueOf(resultSetProcedure.getString("PROCEDURE_TYPE")).intValue();
+			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"), jdbcMappings.get(typeName));*/
+
 			ResultSet pp = metaData.getProcedureColumns(connection.getCatalog(), connection.getSchema(), procedure.getName(), null);
 			List<String[]> l = procedure.getParameters();
 			while (pp.next()) {

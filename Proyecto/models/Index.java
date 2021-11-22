@@ -2,7 +2,6 @@ package Proyecto.models;
 
 public class Index {
 	private String name;
-
 	private String column;
 	
 	
@@ -10,7 +9,6 @@ public class Index {
 	
 	public Index(String nombre, String col) {
 		this.name = nombre;
-	
 		this.column = col;
 	}
 
@@ -39,7 +37,6 @@ public class Index {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((column == null) ? 0 : column.hashCode());
-		
 		return result;
 	}
 
@@ -73,8 +70,10 @@ public class Index {
 				          + other.name + " si posee indices.\n";
 		} else if (!column.equals(other.column))
 			result += "Los valores de los indices no son iguales.\n";
+
 		if (result == "")
 			result += "Los indices " + this.name + " y " + other.name + " son iguales.\n";
+
 		return result;
 	}
 }
