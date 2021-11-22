@@ -20,7 +20,9 @@ public class Key {
 	private String referenceKey;
 	//private Status status;
 
-	public Key() {}
+	public Key() {
+		columns = new HashSet<Column>();
+	}
 
 	/*
 	 * 1= is primary 2= is foreink 3= is unique
@@ -50,7 +52,10 @@ public class Key {
 	public void setSeqNumber(int numberOfKey) {
 		seqNumber = numberOfKey;
 	}
-
+	
+	public void setColumn(Column column) {
+		columns.add(column);
+	}
 	// Cuando una clave es foranea, hay que decir a que clave hace referencia
 	public void referenceTo(String refKey, String refTable) {
 		this.referenceKey = refKey;
@@ -169,14 +174,15 @@ public class Key {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		//if (getClass() != obj.getClass())
+			//return false;
 		Key other = (Key) obj;
 		if (columns == null) {
 			if (other.columns != null)
 				return false;
-		} else if (!columns.equals(other.columns))
+		} else if (!columnasIguales(columns,other.columns)) {			
 			return false;
+		}
 		if (isForeink != other.isForeink)
 			return false;
 		if (isPrimary != other.isPrimary)
@@ -186,8 +192,9 @@ public class Key {
 		if (referenceKey == null) {
 			if (other.referenceKey != null)
 				return false;
-		} else if (!referenceKey.equals(other.referenceKey))
+		} else if (!referenceKey.equals(other.referenceKey)) {	
 			return false;
+		}	
 		if (referenceTable == null) {
 			if (other.referenceTable != null)
 				return false;
@@ -195,9 +202,21 @@ public class Key {
 			return false;
 		if (seqNumber != other.seqNumber)
 			return false;
-		/* else if (!name.equals(other.name))
-			return false;*/
 		return true;
+	}
+	public boolean columnasIguales(Set<Column> columns1, Set<Column> columns2) {
+		Column column1 = null;
+		Column column2 = null;
+		for (Iterator iterator = columns1.iterator(); iterator.hasNext();) {
+		 column1 = (Column) iterator.next();
+		 for (Iterator iterator2 = columns2.iterator(); iterator2.hasNext();) {
+			 column2 = (Column) iterator2.next();
+			if (column2.getName().equals(column1.getName())) {
+				return true;
+			}
+		 }	
+		}
+		return false;
 	}
 	
 	public String compare(Key other) {

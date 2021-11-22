@@ -136,7 +136,7 @@ public class Table {
 				return false;
 		} else if (!name.equals(other.name)) {
 			return false;
-		}else {
+		} else {
 			if(columns.size() != other.getColumns().size()) {
 				return false;
 			} else {
@@ -167,12 +167,14 @@ public class Table {
 					}
 				}
 			}
+			
 			if (keys.size() != other.getKeys().size()) {
 				return false;
 			} else {
+				
 				for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
 					Key key = (Key) iterator.next();
-					if(other.getKey(key) != null && !other.getKey(key).equals(key)) {
+					if(other.getKey(key)== null) {
 						return false;
 					}
 				}
@@ -414,12 +416,17 @@ public class Table {
 			} else {
 				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de indices \n"
 						+ "Ahora veamos sus indices \n"; 
+				Index index = null;
+				Index otherIndex = null;
+				boolean banderaIndex = false;
 				for (Iterator iterator = indexs.iterator(); iterator.hasNext();) {
-					Index index = (Index) iterator.next();
-					Index otherIndex = other.getIndex(index);
+					index = (Index) iterator.next();
+					 otherIndex = other.getIndex(index);
 					if(otherIndex==null) {
 						result += "La BD1 con tabla "+ this.getName() +" Posee un Index llamado "+ index.getName() + ""
+								+ " que esta asociado a la columna "+index.getColumn()+" "
 								+ "Pero la BD2 con esta tabla no posee este index \n";
+						banderaIndex = true;
 					} else {
 						if (otherIndex.getName().equals(index.getName())) {
 							result += "Ambas BDs con tabla : "+ this.getName() + " Poseen un index llamado "+ index.getName() ;
@@ -431,6 +438,18 @@ public class Table {
 							}
 						}
 						
+					}
+				}	
+				if (banderaIndex) {
+					for (Iterator iterator2 = other.getIndexs().iterator(); iterator2.hasNext();) {
+						index = (Index) iterator2.next();
+						 otherIndex = getIndex(index);
+						if(otherIndex==null) {
+							result += "En cambio la BD2 con tabla "+ this.getName() +" Posee un Index llamado "+ index.getName() + ""
+									+ " que esta asociado a la columna "+index.getColumn()+" "
+									+ "Que la BD1 con esta tabla no posee. \n";
+							banderaIndex = true;
+						}
 					}
 				}
 			}
@@ -492,92 +511,126 @@ public class Table {
 			} else {
 				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de Claves primarias \n"
 						+ "Ahora veamos sus Claves primarias \n"; 
+				Key key =null;
+				Key otherKey = null;
+				boolean banderaKey = false;
+				
 				for (Iterator<Key> iterator = primaryKeys.iterator(); iterator.hasNext();) {
-					Key key = (Key) iterator.next();
-					Key otherKey = other.getKey(key);
-					if(otherKey == null) {
-						result += "La BD1 con tabla "+ this.getName() +" Posee una clave primaria llamada "+ key.getKeyName() + ""
-								+ "Pero la BD2 con esta tabla No posee una key similar con la misma estructura \n";
-						result += otherKey.compare(key)+ "\n";
-					} else {
-						result += "Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key "+ key.getKeyName()+ ""
-								+ " de la BD1 con esta tabla \n"+ key.toString() +" \n"
-								+ " Y la clave "+ otherKey.getKeyName()+ " de la BD2 con la misma tabla \n"+otherKey.toString() + "\n";
+					key = (Key) iterator.next();
+					if (key != null) {
+						otherKey = other.getKey(key);
+						if(otherKey == null) {
+							result += "La BD1 con tabla "+ this.getName() +" Posee una clave primaria llamada "+ key.getKeyName() + "que esta asociada";
+							if (key.getColumns().size()==1) {
+								result += "a la columna:"+ key.getColumns().toString();
+							} else {
+								result += "a las columnas "+ key.getColumns().toString();
+							}
+							result+= "Pero la BD2 con esta tabla No posee una key similar con la misma estructura \n";
+							banderaKey = true;
+						} else {
+							result += "Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key "+ key.getKeyName()+ ""
+									+ " de la BD1 con esta tabla \n"+ key.toString() +" \n"
+									+ " Y la clave "+ otherKey.getKeyName()+ " de la BD2 con la misma tabla \n"+otherKey.toString() + "\n";
 						}
-						
 					}
+					
+				}
+				if (banderaKey) {
+					for (Iterator<Key> iterator2 = otherPrimaryKeys.iterator(); iterator2.hasNext();) {
+						
+						key = (Key) iterator2.next();
+						System.out.println( "otherPrimaryKeys"+key.toString());
+						if (key != null) {	
+							otherKey = this.getKey(key);
+							if(otherKey == null) {
+								result += "La BD2 con tabla "+ other.getName() +" Posee una clave primaria llamada "+ key.getKeyName() + "que esta asociada";
+								if (key.getColumns().size()==1) {
+									result += "a la columna:"+ key.getColumns().toString();
+								} else {
+									result += "a las columnas "+ key.getColumns().toString();
+								}
+								result+= "Pero la BD1 con esta tabla No posee una key similar con la misma estructura \n";
+							}}
+					
+					}
+				}
 			}
 			Set<Key> uniqueKeys = this.getUniqueKeys();
 			Set<Key> otherUniqueKeys = other.getUniqueKeys();
 			result += "Continuamos con las claves secundarias\n";
-			if (uniqueKeys.size() != otherUniqueKeys.size()) {
-				result += " Las tablas poseen distinta cantidad de claves secundarias \n"; 
-				if(uniqueKeys.size() > otherUniqueKeys.size()) {
-					result += "la tabla " +this.name+ " de la BD1 tiene mas claves primarias que la tabla "+ other.getName() +" de la BD2"
-							+ "Posee "+ uniqueKeys.size()+ "y la otra "+ otherUniqueKeys.size()+ "\n"; 
-				} else {
-					result += "la tabla " +other.getName()+ " de la BD2 tiene mas claves primarias que la tabla "+ name +" de la BD1"
-							+ "Posee "+ otherUniqueKeys.size()+ "y la otra "+ uniqueKeys.size() + "\n"; 
-				}
-				Set<Key> clavesUnicasIguales = new HashSet<Key>();
-				Set<Key> clavesUnicPropiasbd1 = new HashSet<Key>();
-				Set<Key> clavesUnicPropiasbd2 = new HashSet<Key>();
-				
-				for (Iterator<Key> iterator = uniqueKeys.iterator(); iterator.hasNext();) {
-					Key uniqueKey = (Key) iterator.next();
-					Key otherUniqueKey = other.getKey(uniqueKey);
-					if (otherUniqueKey == null) {
-						clavesUnicPropiasbd1.add(uniqueKey);
-					} else {
-						clavesUnicasIguales.add(uniqueKey);
-					}
-				}
-				for (Iterator<Key> iterator = otherUniqueKeys.iterator(); iterator.hasNext();) {
-					Key uniqueKey = (Key) iterator.next();
-					Key otherUniqueKey = this.getKey(uniqueKey);
-					if (otherUniqueKey == null) {
-						clavesUnicPropiasbd2.add(uniqueKey);
-					}
-				}
-				result += "A continuacion mostramos las claves secundarias equivalentes y diferentes\n";
-				if (clavesUnicasIguales.size() >0) {
-					result +=  "Las Claves secundarias iguales son :\n";
-					for (Iterator<Key> iterator = clavesUnicasIguales.iterator(); iterator.hasNext();) {
-						Key table = (Key) iterator.next();
-						result +=table.toString()+"\n";
-					}
-				}
-				if (clavesUnicPropiasbd1.size() >0) {
-					result+= "Las claves secundarias de la tabla "+this.getName()+" de la BD1 diferentes de la tabla "+other.getName()+" de la BD2 son :";
-					for (Iterator<Key> iterator = clavesUnicPropiasbd1.iterator(); iterator.hasNext();) {
-						Key table = (Key) iterator.next();
-						result += table.toString()+"\n";
-					}
-				}
-				if (clavesUnicPropiasbd2.size() >0) {
-					result+= "Las Claves secundarias de la tabla "+this.getName()+" de la BD2 diferentes de la tabla "+other.getName()+" de la BD1 son :";
-					for (Iterator<Key> iterator = clavesUnicPropiasbd2.iterator(); iterator.hasNext();) {
-						Key table = (Key) iterator.next();
-						result += table.toString()+"\n";
-					}
-				}
+			if (uniqueKeys.size()==0 && otherUniqueKeys.size()==0) {
+				result += "Ambas tablas no poseen claves Secundarias";
 			} else {
-				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de Claves secundarias \n"
-						+ "Ahora veamos sus Claves secundarias \n"; 
-				for (Iterator<Key> iterator = uniqueKeys.iterator(); iterator.hasNext();) {
-					Key key = (Key) iterator.next();
-					Key otherKey = other.getKey(key);
-					if(otherKey == null) {
-						result += "La BD1 con tabla "+ this.getName() +" Posee una clave secundaria llamada "+ key.getKeyName() + ""
-								+ "Pero la BD2 con esta tabla No posee una key similar con la misma estructura \n";
-						result += otherKey.compare(key)+ "\n";
+				if (uniqueKeys.size() != otherUniqueKeys.size()) {
+					result += " Las tablas poseen distinta cantidad de claves secundarias \n"; 
+					if(uniqueKeys.size() > otherUniqueKeys.size()) {
+						result += "la tabla " +this.name+ " de la BD1 tiene mas claves primarias que la tabla "+ other.getName() +" de la BD2"
+								+ "Posee "+ uniqueKeys.size()+ "y la otra "+ otherUniqueKeys.size()+ "\n"; 
 					} else {
-						result += "Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key "+ key.getKeyName()+ ""
-								+ " de la BD1 con esta tabla \n"+ key.toString() +" \n"
-								+ " Y la clave "+ otherKey.getKeyName()+ " de la BD2 con la misma tabla \n"+otherKey.toString() + "\n";
-						}
-						
+						result += "la tabla " +other.getName()+ " de la BD2 tiene mas claves primarias que la tabla "+ name +" de la BD1"
+								+ "Posee "+ otherUniqueKeys.size()+ "y la otra "+ uniqueKeys.size() + "\n"; 
 					}
+					Set<Key> clavesUnicasIguales = new HashSet<Key>();
+					Set<Key> clavesUnicPropiasbd1 = new HashSet<Key>();
+					Set<Key> clavesUnicPropiasbd2 = new HashSet<Key>();
+					
+					for (Iterator<Key> iterator = uniqueKeys.iterator(); iterator.hasNext();) {
+						Key uniqueKey = (Key) iterator.next();
+						Key otherUniqueKey = other.getKey(uniqueKey);
+						if (otherUniqueKey == null) {
+							clavesUnicPropiasbd1.add(uniqueKey);
+						} else {
+							clavesUnicasIguales.add(uniqueKey);
+						}
+					}
+					for (Iterator<Key> iterator = otherUniqueKeys.iterator(); iterator.hasNext();) {
+						Key uniqueKey = (Key) iterator.next();
+						Key otherUniqueKey = this.getKey(uniqueKey);
+						if (otherUniqueKey == null) {
+							clavesUnicPropiasbd2.add(uniqueKey);
+						}
+					}
+					result += "A continuacion mostramos las claves secundarias equivalentes y diferentes\n";
+					if (clavesUnicasIguales.size() >0) {
+						result +=  "Las Claves secundarias iguales son :\n";
+						for (Iterator<Key> iterator = clavesUnicasIguales.iterator(); iterator.hasNext();) {
+							Key table = (Key) iterator.next();
+							result +=table.toString()+"\n";
+						}
+					}
+					if (clavesUnicPropiasbd1.size() >0) {
+						result+= "Las claves secundarias de la tabla "+this.getName()+" de la BD1 diferentes de la tabla "+other.getName()+" de la BD2 son :";
+						for (Iterator<Key> iterator = clavesUnicPropiasbd1.iterator(); iterator.hasNext();) {
+							Key table = (Key) iterator.next();
+							result += table.toString()+"\n";
+						}
+					}
+					if (clavesUnicPropiasbd2.size() >0) {
+						result+= "Las Claves secundarias de la tabla "+this.getName()+" de la BD2 diferentes de la tabla "+other.getName()+" de la BD1 son :";
+						for (Iterator<Key> iterator = clavesUnicPropiasbd2.iterator(); iterator.hasNext();) {
+							Key table = (Key) iterator.next();
+							result += table.toString()+"\n";
+						}
+					}
+				} else {
+					result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de Claves secundarias \n"
+							+ "Ahora veamos sus Claves secundarias \n"; 
+					for (Iterator<Key> iterator = uniqueKeys.iterator(); iterator.hasNext();) {
+						Key key = (Key) iterator.next();
+						Key otherKey = other.getKey(key);
+						if(otherKey == null) {
+							result += "La BD1 con tabla "+ this.getName() +" Posee una clave secundaria llamada "+ key.getKeyName() + ""
+									+ "Pero la BD2 con esta tabla No posee una key similar con la misma estructura \n";
+							//result += otherKey.compare(key)+ "\n";
+						} else {
+							result += "Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key "+ key.getKeyName()+ ""
+									+ " de la BD1 con esta tabla \n"+ key.toString() +" \n"
+									+ " Y la clave "+ otherKey.getKeyName()+ " de la BD2 con la misma tabla \n"+otherKey.toString() + "\n";
+							}
+							
+						}
+				}
 			}
 			Set<Key> foreignKeys = this.getForeignKeys();
 			Set<Key> otherForeignKeys = other.getForeignKeys();
@@ -636,20 +689,32 @@ public class Table {
 			} else {
 				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de Claves foraneas \n"
 						+ "Ahora veamos sus claves foraneas \n"; 
+				Key key  = null;
+				Key otherKey = null;
+				boolean banderaKey = false;
 				for (Iterator<Key> iterator = foreignKeys.iterator(); iterator.hasNext();) {
-					Key key = (Key) iterator.next();
-					Key otherKey = other.getKey(key);
+					key = (Key) iterator.next();
+					otherKey = other.getKey(key);
 					if(otherKey == null) {
 						result += "La BD1 con tabla "+ this.getName() +" Posee una clave foranea llamada "+ key.getKeyName() + ""
 								+ "Pero la BD2 con esta tabla No posee una key similar con la misma estructura \n";
-						result += otherKey.compare(key)+ "\n";
+						banderaKey = true;
 					} else {
 						result += "Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key "+ key.getKeyName()+ ""
 								+ " de la BD1 con esta tabla \n"+ key.toString() +" \n"
 								+ " Y la clave "+ otherKey.getKeyName()+ " de la BD2 con la misma tabla \n"+otherKey.toString() + "\n";
-						}
-						
+						}	
 					}
+				if (banderaKey) {
+					for (Iterator<Key> iterator2 = otherForeignKeys.iterator(); iterator2.hasNext();) {
+						key = (Key) iterator2.next();
+						otherKey = this.getKey(key);
+						if(otherKey == null) {
+							result += "La BD2 con tabla "+ this.getName() +" Posee una clave foranea llamada "+ key.getKeyName() + ""
+										+ "Pero la BD1 con esta tabla No posee una key similar con la misma estructura \n";
+						}
+					}	
+				}
 			}
 			
 		return result;

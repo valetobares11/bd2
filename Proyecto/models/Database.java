@@ -56,12 +56,12 @@ public class Database {
 		if (!(obj instanceof Database))
 			return false;
 		Database other = (Database) obj;
-		if (name == null) {
+		/*if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name)) {
 			return false;
-		} else {
+		} else {*/
 			if (tables.size() != other.getTables().size()) {
 				return false;
 			} else {
@@ -83,7 +83,7 @@ public class Database {
 				}
 			}		
 			
-		}
+		//}
 		return true;
 	}
 	
@@ -96,6 +96,7 @@ public class Database {
 			
 		} else {
 			 result += "El nombre de las base de datos son iguales, ambas se llaman "+ name +"\n\n";
+		}	 
 			if (tables.size() != other.getTables().size()) {
 				result += "El tamaño de las tablas es distinto ... \n";
 				if (tables.size() > other.getTables().size()) {
@@ -125,7 +126,7 @@ public class Database {
 					} 
 				}
 				
-				result += "Por lo tanto las  dos Base de Datos son distintas a continuacion mostramos las tablas equivalentes y diferentes\n";
+				result += "Por lo tanto las  dos Base de Datos son distintas, a continuacion mostramos las tablas equivalentes y diferentes\n";
 					
 				if (tablasIguales.size() >0) {
 					result += "Las tablas iguales son :\n";
@@ -151,6 +152,7 @@ public class Database {
 				
 			} else {
 				result += "Ahora vamos a comparar las Tablas de ambas \n";
+				
 				for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
 					Table table = (Table) iterator.next();
 					Table otherTable = other.getTable(table.getName());
@@ -246,7 +248,6 @@ public class Database {
 				}
 				
 			}
-		}
 		
 		if (this.equals(other)) {
 			result += "\nEn conclucion podemos decir que las base de datos son IGUALES por todo lo mencionado anteriormente \n";

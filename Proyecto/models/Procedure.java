@@ -97,8 +97,43 @@ public class Procedure {
 	}
 
 	public String compare(Procedure procedure) {
-		// TODO Auto-generated method stub
-		return null;
+		String result = "";
+		Procedure other = (Procedure) procedure;
+		if (this.name.equals(other.name)) {
+				//result += "Ambos poseen el procedimiento con el nombre "+this.name+".\n";
+				if (parameters.size() != other.getParameters().size()) {
+					if (parameters.size() < other.getParameters().size()) {
+						result += "La cantidad de paramatros es distinta en cada procemiento, "
+								  +"el procedimiento de la bd1 tiene menos parametros que la bd2.\n";
+					}else {
+						result += "La cantidad de paramatros es distinta en cada procemiento, "
+								  +"el procedimiento de la bd2 tiene menos parametros que la bd1.\n";
+					}
+					result += "Por lo tanto podemos asegurar que los procedimientos son distintos.\n";
+				}else {
+					boolean diference = false;
+					result += "Los procedimientos tienen la misma cantidad de parametros.\n"; 
+					for (Iterator iterator = parameters.iterator(); iterator.hasNext();) {
+						String parameter = (String) iterator.next();
+						if (!other.constainsParameter(parameter)) {
+							diference = true;
+							result += "El parametro "+parameter+" no pertenese al procedimiento de la bd2";
+						}
+					}
+					if (diference) {
+						for (Iterator iterator = other.parameters.iterator(); iterator.hasNext();) {
+							String parameter = (String) iterator.next();
+							if (!this.constainsParameter(parameter)) {
+								result += "El parametro "+parameter+" no pertenese al procedimiento de la bd1";
+							}
+						}
+						result += "Por lo tanto podemos asegurar que los procedimientos son distintos.\n";
+					}else {
+						result += "Los parametros de los procedimientos de ambas tablas son iguales.\n";
+					}
+				}
+		}
+		return result;
 	}
 
 }

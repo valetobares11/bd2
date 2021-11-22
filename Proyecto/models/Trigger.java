@@ -75,9 +75,11 @@ public class Trigger {
 			result += this.name + " y " + other.name + " como se ve no tienen el mismo nombre.\n";
 		} else {
 			if (!(action.equals(other.getAction())))
-				result += this.name + " y " + other.name + " no generan la misma accion.\n";
+				result += this.name + " y " + other.name + " no generan la misma accion.\n Una genera un "
+						+ ""+action+" y la otra un "+other.getAction()+"\n";
 			if (!(shot.equals(other.getShot())))
-				result += this.name + " y " + other.name + " no generan la accion en el mismo momento.\n";
+				result += this.name + " y " + other.name + " no generan la accion en el mismo momento.\n"
+						+ " Una la genera en "+this.shot+"  Y la otra en "+other.shot+" \n";
 		}
 		if (result == "")
 			result += "Los trigger " + this.name + " y " + other.name + " son iguales.\n";;

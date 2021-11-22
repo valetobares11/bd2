@@ -1,6 +1,8 @@
 package Proyecto;
 
 import Proyecto.models.*;
+
+
 import java.sql.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -139,13 +141,13 @@ public class BaseJava {
 		  **/
 		  
 		 //PK significa primary key y FK foreign key
-		  ResultSet PK = metaData.getPrimaryKeys(connection.getCatalog(), null, table.getName());
-		  ResultSet FK = metaData.getImportedKeys(connection.getCatalog(), null, table.getName());
-		  
-		  while(PK.next()){
+		  ResultSet PK = metaData.getPrimaryKeys(connection.getCatalog(), this.name_bd, table.getName());
+		  ResultSet FK = metaData.getImportedKeys(connection.getCatalog(), this.name_bd, table.getName());
+	
+		/*  while(PK.next()){
 			 //Key key = new Key();
 			 Set<Key> keyColumns = new HashSet<>();
-			  String nombreKey = PK.getString("CONSTRAINT_NAME");
+			  String nombreKey = PK.getString("PK_NAME");
 			  Key key = table.getKeyPorNombre(nombreKey);
 			  boolean yaCreada = false;
 			  if (key == null)
@@ -153,53 +155,50 @@ public class BaseJava {
 			  else
 				  yaCreada = true;
 			  if (!yaCreada) {  
-				  key.setKeyName(PK.getString("CONSTRAINT_NAME"));
-				  if (PK.getString("CONSTRAINT_TYPE").equals("FOREIGN KEY")) {
+				  key.setKeyName(PK.getString("PK_NAME"));
+			
+				  if (PK.getString("PK_TYPE").equals("FOREIGN KEY")) {
 					  key.setKeyType(2);
 					  //key.setColumns(key.getColumns().add(new Column()));
 					  key.referenceTo(PK.getString("REFERENCED_COLUMN_NAME"), PK.getString("REFERENCED_TABLE_NAME"));
 	    		  }
-				  if (PK.getString("CONSTRAINT_TYPE").equals("PRIMARY KEY")) {
+				  if (PK.getString("PK_TYPE").equals("PRIMARY KEY")) {
 					  key.setKeyType(1);
 				  }
-				  if (PK.getString("CONSTRAINT_TYPE").equals("UNIQUE KEY")) {
+				  if (PK.getString("PK_TYPE").equals("UNIQUE KEY")) {
 					  key.setKeyType(3); 
 				  }
 			  }
 			  key.getColumns().add(table.getColumn(PK.getString("COLUMN_NAME")));
 			  table.addKey(key);
 		  
-		  }
-		  
-		  while(FK.next()){
-				 //Key key = new Key();
-				 Set<Key> keyColumns = new HashSet<>();
-				  String nombreKey = FK.getString("CONSTRAINT_NAME");
-				  Key key = table.getKeyPorNombre(nombreKey);
-				  boolean yaCreada = false;
-				  if (key == null)
-					  key = new Key();
-				  else
-					  yaCreada = true;
-				  if (!yaCreada) {  
-					  key.setKeyName(FK.getString("CONSTRAINT_NAME"));
-					  if (FK.getString("CONSTRAINT_TYPE").equals("FOREIGN KEY")) {
-						  key.setKeyType(2);
-						  //key.setColumns(key.getColumns().add(new Column()));
-						  key.referenceTo(FK.getString("REFERENCED_COLUMN_NAME"), FK.getString("REFERENCED_TABLE_NAME"));
-		    		  }
-					  if (FK.getString("CONSTRAINT_TYPE").equals("PRIMARY KEY")) {
-						  key.setKeyType(1);
-					  }
-					  if (FK.getString("CONSTRAINT_TYPE").equals("UNIQUE KEY")) {
-						  key.setKeyType(3); 
-					  }
-				  }
-				  key.getColumns().add(table.getColumn(PK.getString("COLUMN_NAME")));
-				  table.addKey(key);
-			  }
-	
-		  
+		  }*/
+		  Key k = null;
+		  Column column = null;
+			while (PK.next()) {
+				k = new Key();
+				column = new Column();
+				k.setKeyType(1);
+				column.setName(PK.getString("COLUMN_NAME"));
+				k.setColumn(column);
+				k.setKeyName(PK.getString("PK_NAME"));
+				k.setSeqNumber(PK.getInt("KEY_SEQ"));
+				table.addKey(k);
+			}
+			
+			while (FK.next()) {
+				k = new Key();
+				k.setKeyType(2);
+				column = new Column();
+				column.setName(FK.getString("FKCOLUMN_NAME"));
+				k.setColumn(column);
+				k.setKeyName(FK.getString("FK_NAME"));
+				// de que tabla y columna es importada
+				k.referenceTo(FK.getString("PKCOLUMN_NAME"), FK.getString("PKTABLE_NAME"));
+				table.addKey(k);
+			}
+			
+		
 		  //ACA LLENAMOS LA TABLA CON SUS TRIGGERS
 		  query = "SELECT * FROM information_schema.TRIGGERS WHERE trigger_schema = '"+this.name_bd+"' "
 		  		+ "AND EVENT_OBJECT_TABLE = '"+nombreTable+"'";
@@ -211,18 +210,16 @@ public class BaseJava {
 		  }
 		  
 		  //ACA LLENAMOS LA TABLA CON LOS INDICES
-		  /**
-		  query = "select INDEX_NAME,column_name,index_type  from information_schema.statistics "
-		  		+ " WHERE TABLE_SCHEMA = '"+this.name_bd+"' and table_name ='"+nombreTable+"'";
-		  ResultSet resutl_index_table = connection.createStatement().executeQuery(query);
-		  **/
 		  ResultSet resutl_index_table = metaData.getIndexInfo(connection.getCatalog(), null, table.getName(), false, false);
+		  Index index =null;
 		  while(resutl_index_table.next()){
-			  Index index = new Index(resutl_index_table.getString("INDEX_NAME"),
-					  resutl_index_table.getString("index_type"),resutl_index_table.getString("column_name"));
-			  table.addIndex(index);
+			  if (!resutl_index_table.getString("COLUMN_NAME").equals("null")) {
+				  index = new Index(resutl_index_table.getString("INDEX_NAME"),resutl_index_table.getString("COLUMN_NAME"));
+				  table.addIndex(index);  
+			  }
+			  
 		  }
-		  
+
 		  database.addTable(table);
 	  }
 	  
@@ -233,17 +230,16 @@ public class BaseJava {
 	  ResultSet resultSetProcedure = metaData.getProcedures(connection.getCatalog(), null, null);
 	  Procedure procedure;
 	 
-		while (resultSetProcedure.next()) {
-			int typeName = Integer.valueOf(resultSetProcedure.getString("PROCEDURE_TYPE")).intValue();
-			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"), jdbcMappings.get(typeName));
+	  while (resultSetProcedure.next()) {
+			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"),resultSetProcedure.getString("PROCEDURE_TYPE"));
 			ResultSet pp = metaData.getProcedureColumns(connection.getCatalog(), connection.getSchema(), procedure.getName(), null);
-			List<String[]> list_parameters = procedure.getParameters();
+			List<String[]> l = procedure.getParameters();
 			while (pp.next()) {
-				list_parameters.add(new String[]{pp.getString("COLUMN_NAME"),pp.getString("COLUMN_TYPE")});
+				l.add(new String[]{pp.getString("COLUMN_NAME"),pp.getString("COLUMN_TYPE")});
 			}
-			procedure.setParameters(list_parameters);
 			database.addProcedure(procedure);
 		}
+
 	Procedure function; //a las funciones las tratamos como procedimientos tambien
 		ResultSet resultSetFunction = metaData.getFunctions(connection.getCatalog(), null, null);
 		while (resultSetFunction.next()) {
