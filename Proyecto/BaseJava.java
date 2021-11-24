@@ -60,7 +60,7 @@ public class BaseJava {
   public Connection setUpConnection() throws SQLException,ClassNotFoundException{
   	
 	  try{
-  			// Load database driver if not already loaded.
+  			
    			Class.forName(this.driver);
   			Connection connection =	DriverManager.getConnection(this.url,this.username,this.password);
 			connection.setAutoCommit(false);
@@ -93,7 +93,8 @@ public class BaseJava {
 	  String nombreTable = INITIALIZATION_STRING;
 	  String colummName = INITIALIZATION_STRING;
 	  String colummType = INITIALIZATION_STRING;
-	  Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
+	  int colummSize = 0;
+	  //Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
 	  
 	  while(resultSetTables.next()) {
 		  nombreTable =resultSetTables.getString(3);
@@ -106,76 +107,19 @@ public class BaseJava {
 	    	 Column columna = new Column();
              colummName = result_columns_table.getString("COLUMN_NAME");
              colummType = result_columns_table.getString("TYPE_NAME");
+             if (colummType.equals("VARCHAR")) {
+            	 colummSize = result_columns_table.getInt("COLUMN_SIZE");
+            	 columna.setSize(colummSize);
+             }
              columna.setName(colummName);
              columna.setType(colummType);
              table.addColumn(columna);
 		  }
-		//ACA LLENAMOS LA TABLAS CON LAS KEYS
-		  /**query= "select CONSTRAINT_NAME,CONSTRAINT_TYPE,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE NATURAL JOIN "
-		  		+ "information_schema.table_constraints where table_name = '"+nombreTable+"'";
-		  
-		  ResultSet PK = metaData.getPrimaryKeys(connection.getCatalog(), null, table.getName());
-		  ResultSet FK = metaData.getImportedKeys(connection.getCatalog(), null, table.getName());
-		  
-		  //ResultSet result_key_table = connection.createStatement().executeQuery(query);
-		  String nextValue = "";
-		  while(PK.next()) {
-			  String val1 = "";
-			  val1 = (String) PK.next();
-			  
-		  }
-		  
-		  while(FK.next()) {
-			  
-		  }
-		  //y dentro repites la operación
-		  
-		  
-		  String val2 = "";
-		  if (rs1.hasNext) {
-		  
-		  }
-		  if (rs2.hasNext) {
-		  val2 = (String) rs2.next();
-		  }
-		  nextValue = val1 + " - " + val2;
-		  ResultSet PK = connection.createStatement().executeQuery(nextValue);
-		  **/
-		  
-		 //PK significa primary key y FK foreign key
+		
 
 		  ResultSet PK = metaData.getPrimaryKeys(connection.getCatalog(), this.name_bd, table.getName());
 		  ResultSet FK = metaData.getImportedKeys(connection.getCatalog(), this.name_bd, table.getName());
 	
-		/*  while(PK.next()){
-			 //Key key = new Key();
-			 Set<Key> keyColumns = new HashSet<>();
-			  String nombreKey = PK.getString("PK_NAME");
-			  Key key = table.getKeyPorNombre(nombreKey);
-			  boolean yaCreada = false;
-			  if (key == null)
-				  key = new Key();
-			  else
-				  yaCreada = true;
-			  if (!yaCreada) {  
-				  key.setKeyName(PK.getString("PK_NAME"));
-			
-				  if (PK.getString("PK_TYPE").equals("FOREIGN KEY")) {
-					  key.setKeyType(2);
-					  //key.setColumns(key.getColumns().add(new Column()));
-					  key.referenceTo(PK.getString("REFERENCED_COLUMN_NAME"), PK.getString("REFERENCED_TABLE_NAME"));
-	    		  }
-				  if (PK.getString("PK_TYPE").equals("PRIMARY KEY")) {
-					  key.setKeyType(1);
-				  }
-				  if (PK.getString("PK_TYPE").equals("UNIQUE KEY")) {
-					  key.setKeyType(3); 
-				  }
-			  }
-			  key.getColumns().add(table.getColumn(PK.getString("COLUMN_NAME")));
-			  table.addKey(key);
-		  
-		  }*/
 		  Key k = null;
 		  Column column = null;
 			while (PK.next()) {
@@ -203,6 +147,22 @@ public class BaseJava {
 				k.referenceTo(FK.getString("PKCOLUMN_NAME"), FK.getString("PKTABLE_NAME"));
 				table.addKey(k);
 			}
+			//PARA EXTRAER LAS CLAVES SECUNDARIAS
+			query = "select CONSTRAINT_NAME,CONSTRAINT_TYPE,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from "
+		+ " information_schema.KEY_COLUMN_USAGE NATURAL JOIN information_schema.table_constraints where table_name = '"+table.getName()+"'";
+			ResultSet result_key_secundarias_table = connection.createStatement().executeQuery(query);
+			 while(result_key_secundarias_table.next()){
+				 if(result_key_secundarias_table.getString("CONSTRAINT_TYPE").equals("UNIQUE")) {
+					 k = new Key();
+						column = new Column();
+						k.setKeyType(3);
+						column.setName(result_key_secundarias_table.getString("COLUMN_NAME"));
+						column.setType(table.getColumn(column.getName()).getType());
+						k.setColumn(column);
+						k.setKeyName(result_key_secundarias_table.getString("CONSTRAINT_NAME"));
+						table.addKey(k);
+				 }	
+			  }
 
 		  //ACA LLENAMOS LA TABLA CON SUS TRIGGERS
 		  query = "SELECT * FROM information_schema.TRIGGERS WHERE trigger_schema = '"+this.name_bd+"' "
@@ -228,22 +188,20 @@ public class BaseJava {
 		  database.addTable(table);
 	  }
 	  
-	  //Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
-
-	 
-	  //ACA LLENAMOS LOS PROCEDURE/FUNCTIONS DE LA BD
+	
 	  ResultSet resultSetProcedure = metaData.getProcedures(connection.getCatalog(), null, null);
 	  Procedure procedure;
 	 
 	  while (resultSetProcedure.next()) {
-			//procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"),resultSetProcedure.getString("PROCEDURE_TYPE"));
 			
-			int typeName = Integer.valueOf(resultSetProcedure.getString("PROCEDURE_TYPE")).intValue();
-			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"), jdbcMappings.get(typeName));
+			//int typeName = Integer.valueOf(resultSetProcedure.getString("PROCEDURE_TYPE")).intValue();
+			//System.out.println("procedure"+typeName);
+			procedure = new Procedure(resultSetProcedure.getString("PROCEDURE_NAME"));
 			ResultSet pp = metaData.getProcedureColumns(connection.getCatalog(), connection.getSchema(), procedure.getName(), null);
 			List<String[]> l = procedure.getParameters();
 			while (pp.next()) {
-				l.add(new String[]{pp.getString("COLUMN_NAME"),pp.getString("COLUMN_TYPE")});
+				l.add(new String[]{pp.getString("COLUMN_NAME"), 
+						getTipoParams(Integer.valueOf(pp.getString("COLUMN_TYPE")).intValue()),pp.getString("TYPE_NAME") });
 			}
 			database.addProcedure(procedure);
 		}
@@ -251,12 +209,14 @@ public class BaseJava {
 	Procedure function; //a las funciones las tratamos como procedimientos tambien
 		ResultSet resultSetFunction = metaData.getFunctions(connection.getCatalog(), null, null);
 		while (resultSetFunction.next()) {
-			int name = Integer.valueOf(resultSetFunction.getString("FUNCTION_TYPE")).intValue();
-			function = new Procedure(resultSetFunction.getString("FUNCTION_NAME"),jdbcMappings.get((name)));
+			//int name = Integer.valueOf(resultSetFunction.getString("FUNCTION_TYPE")).intValue();
+			//System.out.println("funciones "+ name);
+			function = new Procedure(resultSetFunction.getString("FUNCTION_NAME"));
 			ResultSet pp = metaData.getFunctionColumns(connection.getCatalog(), connection.getSchema(), function.getName(), null);
 			List<String[]> list_parameters = function.getParameters();
 			while (pp.next()) {
-				list_parameters.add(new String[]{pp.getString("COLUMN_NAME"),pp.getString("COLUMN_TYPE")});
+				list_parameters.add(new String[]{pp.getString("COLUMN_NAME"), 
+						getTipoParams(Integer.valueOf(pp.getString("COLUMN_TYPE")).intValue()),pp.getString("TYPE_NAME") });
 			}
 			function.setParameters(list_parameters);
 			database.addProcedure(function);
@@ -264,13 +224,22 @@ public class BaseJava {
 	return database; 
   }
 	 
+  public String getTipoParams(int tipo) {
+	  if (tipo == 0) return "UNKNOWN";
+	  if (tipo == 1) return "IN";
+	  if (tipo == 2) return "INOUT";
+	  if (tipo == 3) return "RESULT";
+	  if (tipo == 4) return "OUT";
+	  if (tipo == 5) return "RETURN";
+	  return "Error";
+  }
   
-  public Map<Integer, String> getAllJdbcTypeNames() throws IllegalArgumentException, IllegalAccessException {
+ /* public Map<Integer, String> getAllJdbcTypeNames() throws IllegalArgumentException, IllegalAccessException {
       Map<Integer, String> result = new HashMap<Integer, String>();
       for (Field field : Types.class.getFields()) {
           result.put((Integer)field.get(null), field.getName());
       }
       return result;
-  }
+  }*/
   
 }

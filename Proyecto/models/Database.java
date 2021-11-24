@@ -234,7 +234,7 @@ public class Database {
 
 		}
 		
-		System.out.println("Aquí terminamos con la comparacion de las BDs y devolvemos el informe");
+		System.out.println("Aquí terminamos con la comparacion de las BDs y devolvemos el informe en la carpeta /Resultados/informe");
 		return result;
 	}
 	

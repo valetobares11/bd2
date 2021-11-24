@@ -1,11 +1,20 @@
 package Proyecto.models;
 
+import javax.print.attribute.standard.MediaSize.Other;
 
 public class Column {
 	
 	private String name;
 	private String type;
-	//public Status status;
+	private int size;
+	
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
 
 	public String getName() {
 		return name;
@@ -43,7 +52,10 @@ public class Column {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		return type.equals(other.getType());
+		if (type.equals(other.getType()) && type.equals("VARCHAR"))
+			return size == other.size;
+		else 
+			return type.equals(other.getType());
 	}
 
 
@@ -57,7 +69,15 @@ public class Column {
 	public String compare(Column column) {
 		String result = "";
 			if(type.equals(column.getType())) {
-				result += "el tipo de la columnas son iguales de tipo " + type;
+				if (type.equals("VARCHAR")) {
+					if ( size == column.getSize()) {
+						result += "el tipo de la columnas son iguales de tipo " + type + " y su longitud tambien ambas de :"+ size;
+					} else {
+						result += "el tipo de la columnas son iguales de tipo " + type + 
+								" pero la longitud no es igual una es de "+ size +" y la otra de "+ column.getSize();
+					}
+				} else 
+					result += "el tipo de la columnas son iguales de tipo " + type;
 			} else {
 				result += "el tipo de las columnas son distintos el de la columna " + name + " de la BD1 es" +type + ""
 						+ " y el de la columna " + column.getName() + " de la BD2  es " + column.getType();

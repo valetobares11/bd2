@@ -28,20 +28,7 @@ public class Main{
   			Database bd1 = base.crearBaseDatos(connection);
   			Database bd2 = base2.crearBaseDatos(connection2);
   			
-  			/*System.out.println("Informacion de la base de datos 1");
-  			//Mostramos Base de datos 1;
-  			System.out.println("Tablas:  \n");
-  			Set<Table> tablas = bd1.getTables();
-  			for (Iterator iterator = tablas.iterator(); iterator.hasNext();) {
-				Table table = (Table) iterator.next();
-				System.out.println(table.toString());
-			}
-  			System.out.println("Procedimientos:  \n");
-  			Set<Procedure> procedimientos = bd1.getProcedures();
-  			for (Iterator iterator = procedimientos.iterator(); iterator.hasNext();) {
-				Procedure procedure = (Procedure) iterator.next();
-				System.out.println(procedure.toString());
-			}*/
+  			
   			
   			String resultado_informe = bd1.compare(bd2);
   		    BufferedWriter bufferedWriter = null;

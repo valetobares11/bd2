@@ -6,9 +6,8 @@ import java.util.List;
 
 public class Procedure {
 
-	//public Status status;
 	private String name;
-	private List<String[]> parameters;
+	private List<String[]> parameters; //[(nombre del Parametro), (tipo de parametro IN,OUT...), (tipo de parametro VARCHAR,INT..) ]
 	private String procedure_return;
 
 	public Procedure(String name, String procedure_return) {
@@ -17,7 +16,12 @@ public class Procedure {
 		this.procedure_return = procedure_return;
 		parameters = new ArrayList<String[]>();
 	}
-
+	
+	public Procedure(String name) {
+		this.name = name;
+		parameters = new ArrayList<String[]>();
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -26,10 +30,10 @@ public class Procedure {
 		this.name = name;
 	}
 	
-	public boolean constainsParameter(String param) {
+	public boolean constainsParameter(String[] param) {
 		for (Iterator iterator = parameters.iterator(); iterator.hasNext();) {
-			String parameter = (String) iterator.next();
-			if (parameter.equals(param)) {
+			String[] parameter = (String[]) iterator.next();
+			if (parameter[2].equals(param[2]) && parameter[1].equals(param[1])) {
 				return true;
 			}
 		}
@@ -81,14 +85,15 @@ public class Procedure {
 				return false;
 			}
 			for (Iterator iterator = parameters.iterator(); iterator.hasNext();) {
-				String parameter = (String) iterator.next();
+				String[] parameter = (String[]) iterator.next();
 				if (!other.constainsParameter(parameter)) {
 					return false;
 				}
 			}
 			
 		}
-		return procedure_return.equals(other.getProcedure_return());
+		return true;
+				//procedure_return.equals(other.getProcedure_return());
 	}
 
 	@Override
@@ -109,29 +114,27 @@ public class Procedure {
 						result += "La cantidad de paramatros es distinta en cada procemiento, "
 								  +"el procedimiento de la bd2 tiene menos parametros que la bd1.\n";
 					}
-					result += "Por lo tanto podemos asegurar que los procedimientos son distintos.\n";
+					
 				}else {
-					boolean diference = false;
+					
 					result += "Los procedimientos tienen la misma cantidad de parametros.\n"; 
-					for (Iterator iterator = parameters.iterator(); iterator.hasNext();) {
-						String parameter = (String) iterator.next();
-						if (!other.constainsParameter(parameter)) {
-							diference = true;
-							result += "El parametro "+parameter+" no pertenese al procedimiento de la bd2";
-						}
-					}
-					if (diference) {
-						for (Iterator iterator = other.parameters.iterator(); iterator.hasNext();) {
-							String parameter = (String) iterator.next();
-							if (!this.constainsParameter(parameter)) {
-								result += "El parametro "+parameter+" no pertenese al procedimiento de la bd1";
-							}
-						}
-						result += "Por lo tanto podemos asegurar que los procedimientos son distintos.\n";
-					}else {
-						result += "Los parametros de los procedimientos de ambas tablas son iguales.\n";
-					}
 				}
+				result += "Vamos a comparar los procedimientos de cada Parametro.\n";
+					for (Iterator iterator = parameters.iterator(); iterator.hasNext();) {
+						String[] parameter = (String[]) iterator.next();
+						if (!other.constainsParameter(parameter)) {
+							result += "El parametro "+ parameter[2]+" "+parameter[0]+" de tipo "+parameter[1]+" no pertenese al procedimiento de la bd2, "
+									+ "es decir que no se encontró otro parametro que tenga el mismo perfil \n";
+						}
+					}
+					
+					for (Iterator iterator = other.parameters.iterator(); iterator.hasNext();) {
+						String[] parameter = (String[]) iterator.next();
+						if (!this.constainsParameter(parameter)) {
+							result += "El parametro "+ parameter[2]+" "+parameter[0]+" de tipo "+parameter[1]+"  no pertenese al procedimiento de la bd1"
+									+ "es decir que no se encontró otro parametro que tenga el mismo perfil \n";
+						}
+					}
 		}
 		return result;
 	}

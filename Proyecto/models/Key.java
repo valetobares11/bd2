@@ -18,7 +18,6 @@ public class Key {
 	private boolean isUnique;
 	private String referenceTable;
 	private String referenceKey;
-	//private Status status;
 
 	public Key() {
 		columns = new HashSet<Column>();
@@ -71,10 +70,6 @@ public class Key {
 			return 3;
 		return 0;
 	}
-
-	/*public Status getStatus() {
-		return status;
-	}*/
 
 	public String getName() {
 		return name;
@@ -174,8 +169,6 @@ public class Key {
 			return true;
 		if (obj == null)
 			return false;
-		//if (getClass() != obj.getClass())
-			//return false;
 		Key other = (Key) obj;
 		if (columns == null) {
 			if (other.columns != null)
