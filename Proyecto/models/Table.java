@@ -233,10 +233,10 @@ public class Table {
 				result += "Las dos tablas poseen distintas cantidad de columnas\n";
 				if(columns.size() > other.getColumns().size()) {
 					result += "La tabla " +this.name+ " de la BD1 tiene mas columnas que la tabla "+ other.getName() +" de la BD2 "
-							 + "Posee "+ columns.size()+ " y la otra "+ other.getIndexs().size()+ "\n"; 
+							 + "Una Posee "+ columns.size()+ " y la otra "+ other.getIndexs().size()+ "\n"; 
 				} else {
 					result += "La tabla " +this.name+ " de la BD1 tiene menos columnas que la tabla "+ other.getName() +" de la BD2 "
-							+ "Posee "+ other.getColumns().size()+ " y la otra "+ columns.size()+ "\n" ; 
+							+ "Una Posee "+ other.getColumns().size()+ " y la otra "+ columns.size()+ "\n" ; 
 				}
 			} else {
 				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de columnas \n";
@@ -379,23 +379,20 @@ public class Table {
 									+ " que esta asociado a la columna "+index.getColumn()+" "
 									+ "Pero la BD2 con esta tabla no posee este index \n";
 						} else {
-							if (otherIndex.getName().equals(index.getName())) {
-								result += "Ambas BDs con tabla : "+ this.getName() + " Poseen un index llamado "+ index.getName()+"\n" ;
-								result += "Veamos si ambos indices son iguales estructuralmente.. \n";
-								if (!otherIndex.equals(index)) {
-									result += otherIndex.compare(index);
-								} else {
-									result += "Ambos Indices son iguales estructuralmente con la siguiente estructura :\n" + index.toString() + "\n";
-								}
-							}
-							
+							String tipoIndice = index.getName().equals("PRIMARY") ? "Primario" : "Secundario";
+							String tipoIndiceOtro = otherIndex.getName().equals("PRIMARY") ? "Primario" : "Secundario";
+							if (tipoIndice.equals(tipoIndiceOtro))
+								result += "Ambos Indices son iguales estructuralmente con la siguiente estructura :\n" + index.toString() +"\n";
+							else
+								result += "Si bien los indices referencian a una misma columna, son de distinto tipo ";
+								result += "El indice de la tabla "+this.getName()+" en la BD1 es "+tipoIndice+", mientras que en la BD2 es "+tipoIndiceOtro+"\n";
 						}
 					}	
 						for (Iterator iterator2 = other.getIndexs().iterator(); iterator2.hasNext();) {
 							index = (Index) iterator2.next();
 							 otherIndex = getIndex(index);
 							if(otherIndex==null) {
-								result += "En cambio la BD2 con tabla "+ this.getName() +" Posee un Index llamado "+ index.getName() + ""
+								result += "la BD2 con tabla "+ this.getName() +" Posee un Index llamado "+ index.getName() + ""
 										+ " que esta asociado a la columna "+index.getColumn()+"\n "
 										+ "Que la BD1 con esta tabla no posee. \n";
 							}

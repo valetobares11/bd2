@@ -1,5 +1,5 @@
 driver=com.mysql.cj.jdbc.Driver
-url=jdbc:mysql://localhost/bd2
+url=jdbc:mysql://localhost/test2
 username=root
-password=xxxxxx
-name_database=bd2
+password=Fraschen.10
+name_database=test2

@@ -1,424 +1,106 @@
 Comenzamnos con la comparacion de las base de datos
-El nombre de las base de datos son iguales, ambas se llaman bd2
-Seguimos con las TablasAhora vamos a comparar las Tablas de ambas 
-Ambas BDs poseen una tabla con el nombre : FACTURA
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre FACTURA poseen la misma cantidad de columnas 
+
+Primero el nombre de las base de datos son distintos una se llama test1 y la otra test2
+La cantidad de tablas de las BDs es Igual
+Ahora vamos a comparar las Tablas de ambas 
+
+
+La BD1 posee una tabla llamada AUTO Pero esa tabla en la BD2 no existe
+la estructura de la tabla es   Table: AUTO
+     Columna: MARCA   Type: VARCHAR   Size: 50
+     Columna: PATENTE   Type: VARCHAR   Size: 10
+     Columna: MODELO   Type: VARCHAR   Size: 50
+     k:Key [name=PRIMARY, columns=[ Columna: PATENTE   Type: VARCHAR   Size: 10], seqNumber=1, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
+     I:Index [name=PRIMARY, column=PATENTE]
+
+
+
+La BD1 posee una tabla llamada INFRACCION Pero esa tabla en la BD2 no existe
+la estructura de la tabla es   Table: INFRACCION
+     Columna: PATENTE   Type: VARCHAR   Size: 10
+      Columna: ID   Type: BIGINT
+     k:Key [name=PRIMARY, columns=[  Columna: ID   Type: BIGINT], seqNumber=1, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
+     k:Key [name=PRIMARY, columns=[ Columna: PATENTE   Type: VARCHAR   Size: 10], seqNumber=2, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
+     k:Key [name=FKINFRACCIONAUTO, columns=[ Columna: PATENTE   Type: VARCHAR   Size: 10], seqNumber=0, isPrimary=false, isForeink=true, isUnique=false, referenceTable=AUTO, referenceKey=PATENTE]
+     k:Key [name=FKINFRACCIONCLIENTE, columns=[  Columna: ID   Type: BIGINT], seqNumber=0, isPrimary=false, isForeink=true, isUnique=false, referenceTable=CLIENTE, referenceKey=ID]
+     I:Index [name=PRIMARY, column=PATENTE]
+
+     I:Index [name=PRIMARY, column=ID]
+
+
+
+Las dos BDs tienen una tabla con el nombre : CLIENTE
+Las dos tablas poseen distintas cantidad de columnas
+La tabla CLIENTE de la BD1 tiene menos columnas que la tabla CLIENTE de la BD2 Una Posee 4 y la otra 3
 Ahora veamos sus columnas 
-Ambas BDs con la tabla : FACTURA poseen una columna llamada MONTOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: MONTO   Type: DECIMAL
-Ambas BDs con la tabla : FACTURA poseen una columna llamada FECHAVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: FECHA   Type: DATE
-Ambas BDs con la tabla : FACTURA poseen una columna llamada NRO_FACTURAVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: NRO_FACTURA   Type: VARCHAR
-Ambas BDs con la tabla : FACTURA poseen una columna llamada NRO_CLIENTEVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: NRO_CLIENTE   Type: BIGINT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre FACTURA poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre FACTURA poseen la misma cantidad de indices 
+Ambas BDs con la tabla : CLIENTE poseen una columna llamada APELLIDO
+Veamos si ambas columnas son iguales estructuralmente.. 
+Ambas son iguales estructuralmente con la siguiente estructura Columna: APELLIDO   Type: VARCHAR   Size: 50
+Ambas BDs con la tabla : CLIENTE poseen una columna llamada DNI
+Veamos si ambas columnas son iguales estructuralmente.. 
+Ambas son iguales estructuralmente con la siguiente estructura Columna: DNI   Type: VARCHAR   Size: 10
+Ambas BDs con la tabla : CLIENTE poseen una columna llamada NOMBRE
+Veamos si ambas columnas son iguales estructuralmente.. 
+Ambas son iguales estructuralmente con la siguiente estructura Columna: NOMBRE   Type: VARCHAR   Size: 50
+La BD2 con tabla CLIENTEPosee una Columna llamada ID
+Pero la BD1 con esta tabla no posee esta columna 
+
+Ahora comparemos entre los triggers de ambas tablas 
+ninguna de las BDs con tabla CLIENTE poseen triggers 
+
+Ahora comparemos entre los indices de ambas tablas 
+ Las tablas poseen distintas cantidad de indices 
+la tabla CLIENTE de la BD2 tiene mas indices  que la tabla CLIENTE de la BD1
+Posee 2 y la otra 1
 Ahora veamos sus indices 
-Ambas BDs con tabla : FACTURA Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=NRO_FACTURA]
+Si bien los indices referencian a una misma columna, son de distinto tipo El indice de la tabla CLIENTE en la BD1 es Primario, mientras que en la BD2 es Secundario
+la BD2 con tabla CLIENTE Posee un Index llamado PRIMARY que esta asociado a la columna ID
+ Que la BD1 con esta tabla no posee. 
 
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre FACTURA poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=NRO_FACTURA, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=NRO_FACTURA, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas BDs poseen una tabla con el nombre : parquimetro
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre parquimetro poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : parquimetro poseen una columna llamada alturaVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: altura   Type: INT
-Ambas BDs con la tabla : parquimetro poseen una columna llamada calleVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: calle   Type: VARCHAR
-Ambas BDs con la tabla : parquimetro poseen una columna llamada nro_parquimetroVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: nro_parquimetro   Type: INT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre parquimetro poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre parquimetro poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : parquimetro Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=nro_parquimetro]
+Ahora vamos a comparar entre las Claves de ambas tablas 
+Arrancamos con las claves primarias
+Ambas tablas con nombre CLIENTE poseen la misma cantidad de Claves primarias 
+Ahora veamos sus Claves primarias 
+La BD1 con tabla CLIENTE Posee una clave primaria llamada PRIMARYque esta asociada
+a la columna:[ Columna: DNI   Type: VARCHAR   Size: 10]
+Pero la BD2 con esta tabla No posee una key con la misma estructura 
+La BD2 con tabla CLIENTE Posee una clave primaria llamada PRIMARYque esta asociadaa la columna:[  Columna: ID   Type: BIGINT]Pero la BD1 con esta tabla No posee una key similar con la misma estructura 
 
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre parquimetro poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=nro_parquimetro, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=nro_parquimetro, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas BDs poseen una tabla con el nombre : DESC_MAYUSCULA
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre DESC_MAYUSCULA poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : DESC_MAYUSCULA poseen una columna llamada descripcionVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: descripcion   Type: VARCHAR
-Ambas BDs con la tabla : DESC_MAYUSCULA poseen una columna llamada idVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: id   Type: INT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre DESC_MAYUSCULA poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre DESC_MAYUSCULA poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : DESC_MAYUSCULA Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=id]
 
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre DESC_MAYUSCULA poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=id, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=id, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas BDs poseen una tabla con el nombre : persona
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre persona poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : persona poseen una columna llamada direccionVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: direccion   Type: VARCHAR
-Ambas BDs con la tabla : persona poseen una columna llamada nombre_apellidoVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: nombre_apellido   Type: VARCHAR
-Ambas BDs con la tabla : persona poseen una columna llamada dniVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: dni   Type: INT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre persona poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre persona poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : persona Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=dni]
+Continuamos con las claves secundarias
+La BD1 con tabla CLIENTE no poseen claves secundarias y la BD2 con la misma tabla si posee y es :
+Key [name=DNI, columns=[ Columna: DNI   Type: VARCHAR   Size: 10], seqNumber=0, isPrimary=false, isForeink=false, isUnique=true, referenceTable=null, referenceKey=null]
 
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre persona poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=dni, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=dni, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas BDs poseen una tabla con el nombre : dueño
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre dueño poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : dueño poseen una columna llamada nro_patenteVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: nro_patente   Type: INT
-Ambas BDs con la tabla : dueño poseen una columna llamada dniVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: dni   Type: INT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre dueño poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre dueño poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : dueño Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=nro_patente]
 
-Ambas BDs con tabla : dueño Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre dueño poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=dni, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=dni, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=nro_patente, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=nro_patente, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas BDs poseen una tabla con el nombre : vehiculo
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre vehiculo poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : vehiculo poseen una columna llamada colorVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: color   Type: VARCHAR
-Ambas BDs con la tabla : vehiculo poseen una columna llamada marcaVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: marca   Type: VARCHAR
-Ambas BDs con la tabla : vehiculo poseen una columna llamada saldo_actualVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: saldo_actual   Type: BIGINT
-Ambas BDs con la tabla : vehiculo poseen una columna llamada modeloVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: modelo   Type: VARCHAR
-Ambas BDs con la tabla : vehiculo poseen una columna llamada nro_patenteVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: nro_patente   Type: INT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre vehiculo poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre vehiculo poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : vehiculo Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=nro_patente]
+Continuamos con las claves foraneas
+ninguna de las BDs con tabla CLIENTE posee Claves Foraneas 
+La BD2 posee una tabla llamada PRODUCTO Pero esa tabla en la BD1 no existe
+la estructura de la tabla es   Table: PRODUCTO
+      Columna: PRECIO   Type: DECIMAL
+     Columna: ID   Type: VARCHAR   Size: 8
+     k:Key [name=PRIMARY, columns=[ Columna: ID   Type: VARCHAR   Size: 8], seqNumber=1, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
+     I:Index [name=PRIMARY, column=ID]
 
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre vehiculo poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=nro_patente, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=nro_patente, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas BDs poseen una tabla con el nombre : FACTURAS_INCONCISTENTES
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre FACTURAS_INCONCISTENTES poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : FACTURAS_INCONCISTENTES poseen una columna llamada NRO_FACTURAVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: NRO_FACTURA   Type: INT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre FACTURAS_INCONCISTENTES poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre FACTURAS_INCONCISTENTES poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : FACTURAS_INCONCISTENTES Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=NRO_FACTURA]
+La BD2 posee una tabla llamada COMPRA Pero esa tabla en la BD1 no existe
+la estructura de la tabla es   Table: COMPRA
+     Columna: ID   Type: VARCHAR   Size: 8
+      Columna: CANTIDAD   Type: INT
+     Columna: DNI   Type: VARCHAR   Size: 10
+     k:Key [name=PRIMARY, columns=[ Columna: DNI   Type: VARCHAR   Size: 10], seqNumber=1, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
+     k:Key [name=FKINCOMPRACLIENTE, columns=[ Columna: DNI   Type: VARCHAR   Size: 10], seqNumber=0, isPrimary=false, isForeink=true, isUnique=false, referenceTable=CLIENTE, referenceKey=DNI]
+     k:Key [name=FKCOMPRAPRODUCTO, columns=[ Columna: ID   Type: VARCHAR   Size: 8], seqNumber=0, isPrimary=false, isForeink=true, isUnique=false, referenceTable=PRODUCTO, referenceKey=ID]
+     k:Key [name=PRIMARY, columns=[ Columna: ID   Type: VARCHAR   Size: 8], seqNumber=2, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
+     I:Index [name=PRIMARY, column=ID]
 
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre FACTURAS_INCONCISTENTES poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=NRO_FACTURA, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=NRO_FACTURA, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas BDs poseen una tabla con el nombre : CLIENTE
-Veamos si ambas son iguales estructuralmente..
-Ambas son iguales estructuralmente 
-  Table: CLIENTE
-      Columna: APELLIDO   Type: VARCHAR
-      Columna: NRO_CLIENTE   Type: BIGINT
-      Columna: TELEFONO   Type: VARCHAR
-      Columna: NOMBRE   Type: VARCHAR
-      Columna: DIRECCION   Type: VARCHAR
-     k:Key [name=PRIMARY, column=NRO_CLIENTE, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-     T:Trigger [name=cte_insert, shot=BEFORE, action= INSERT] 
+     I:Index [name=PRIMARY, column=DNI]
 
-     I:Index [name=PRIMARY, type=BTREE, column=NRO_CLIENTE]
-Ambas BDs poseen una tabla con el nombre : PRODUCTO
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre PRODUCTO poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : PRODUCTO poseen una columna llamada PRECIOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: PRECIO   Type: DECIMAL
-Ambas BDs con la tabla : PRODUCTO poseen una columna llamada COD_PRODUCTOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: COD_PRODUCTO   Type: BIGINT
-Ambas BDs con la tabla : PRODUCTO poseen una columna llamada DESCRIPCIONVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: DESCRIPCION   Type: VARCHAR
-Ambas BDs con la tabla : PRODUCTO poseen una columna llamada STOCK_MINIMOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: STOCK_MINIMO   Type: BIGINT
-Ambas BDs con la tabla : PRODUCTO poseen una columna llamada CANTIDADVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: CANTIDAD   Type: BIGINT
-Ambas BDs con la tabla : PRODUCTO poseen una columna llamada STOCK_MAXIMOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: STOCK_MAXIMO   Type: BIGINT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre PRODUCTO poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre PRODUCTO poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : PRODUCTO Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=COD_PRODUCTO]
 
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre PRODUCTO poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=COD_PRODUCTO, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=COD_PRODUCTO, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas BDs poseen una tabla con el nombre : ITEM_FACTURA
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre ITEM_FACTURA poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : ITEM_FACTURA poseen una columna llamada PRECIOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: PRECIO   Type: DECIMAL
-Ambas BDs con la tabla : ITEM_FACTURA poseen una columna llamada NRO_FACTURAVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: NRO_FACTURA   Type: VARCHAR
-Ambas BDs con la tabla : ITEM_FACTURA poseen una columna llamada COD_PRODUCTOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: COD_PRODUCTO   Type: BIGINT
-Ambas BDs con la tabla : ITEM_FACTURA poseen una columna llamada CANTIDADVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: CANTIDAD   Type: BIGINT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre ITEM_FACTURA poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre ITEM_FACTURA poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : ITEM_FACTURA Poseen un index llamado FK_ITEM_FACTURA_FACTURAVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=FK_ITEM_FACTURA_FACTURA, type=BTREE, column=NRO_FACTURA]
 
-Ambas BDs con tabla : ITEM_FACTURA Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=COD_PRODUCTO]
 
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre ITEM_FACTURA poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=COD_PRODUCTO, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=COD_PRODUCTO, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key FK_ITEM_FACTURA_FACTURA de la BD1 con esta tabla 
-Key [name=FK_ITEM_FACTURA_FACTURA, column=NRO_FACTURA, isPrimary=false, isForeink=true, isUnique=false, referenceTable=FACTURA, referenceKey=NRO_FACTURA] 
- Y la clave FK_ITEM_FACTURA_FACTURA de la BD2 con la misma tabla 
-Key [name=FK_ITEM_FACTURA_FACTURA, column=NRO_FACTURA, isPrimary=false, isForeink=true, isUnique=false, referenceTable=FACTURA, referenceKey=NRO_FACTURA]
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key FK_ITEM_FACTURA_PRODUCTO de la BD1 con esta tabla 
-Key [name=FK_ITEM_FACTURA_PRODUCTO, column=COD_PRODUCTO, isPrimary=false, isForeink=true, isUnique=false, referenceTable=PRODUCTO, referenceKey=COD_PRODUCTO] 
- Y la clave FK_ITEM_FACTURA_PRODUCTO de la BD2 con la misma tabla 
-Key [name=FK_ITEM_FACTURA_PRODUCTO, column=COD_PRODUCTO, isPrimary=false, isForeink=true, isUnique=false, referenceTable=PRODUCTO, referenceKey=COD_PRODUCTO]
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key fk_cod_producto_produto de la BD1 con esta tabla 
-Key [name=fk_cod_producto_produto, column=COD_PRODUCTO, isPrimary=false, isForeink=true, isUnique=false, referenceTable=PRODUCTO, referenceKey=COD_PRODUCTO] 
- Y la clave fk_cod_producto_produto de la BD2 con la misma tabla 
-Key [name=fk_cod_producto_produto, column=COD_PRODUCTO, isPrimary=false, isForeink=true, isUnique=false, referenceTable=PRODUCTO, referenceKey=COD_PRODUCTO]
-Ambas BDs poseen una tabla con el nombre : estacionamiento
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre estacionamiento poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : estacionamiento poseen una columna llamada fechaVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: fecha   Type: DATE
-Ambas BDs con la tabla : estacionamiento poseen una columna llamada hs_salidaVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: hs_salida   Type: TIME
-Ambas BDs con la tabla : estacionamiento poseen una columna llamada saldo_inicialVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: saldo_inicial   Type: BIGINT
-Ambas BDs con la tabla : estacionamiento poseen una columna llamada nro_estacionamientoVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: nro_estacionamiento   Type: INT
-Ambas BDs con la tabla : estacionamiento poseen una columna llamada hs_entradaVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: hs_entrada   Type: TIME
-Ambas BDs con la tabla : estacionamiento poseen una columna llamada saldo_finalVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: saldo_final   Type: BIGINT
-Ambas BDs con la tabla : estacionamiento poseen una columna llamada nro_parquimetroVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: nro_parquimetro   Type: INT
-Ambas BDs con la tabla : estacionamiento poseen una columna llamada nro_patenteVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: nro_patente   Type: INT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre estacionamiento poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre estacionamiento poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : estacionamiento Poseen un index llamado nro_patenteVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=nro_patente, type=BTREE, column=nro_patente]
 
-Ambas BDs con tabla : estacionamiento Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=nro_estacionamiento]
-
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre estacionamiento poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=nro_estacionamiento, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=nro_estacionamiento, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key estacionamiento_ibfk_1 de la BD1 con esta tabla 
-Key [name=estacionamiento_ibfk_1, column=nro_patente, isPrimary=false, isForeink=true, isUnique=false, referenceTable=vehiculo, referenceKey=nro_patente] 
- Y la clave estacionamiento_ibfk_1 de la BD2 con la misma tabla 
-Key [name=estacionamiento_ibfk_1, column=nro_patente, isPrimary=false, isForeink=true, isUnique=false, referenceTable=vehiculo, referenceKey=nro_patente]
-Ambas BDs poseen una tabla con el nombre : Banco
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre Banco poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : Banco poseen una columna llamada precioVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: precio   Type: INT
-Ambas BDs con la tabla : Banco poseen una columna llamada cod_bancoVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: cod_banco   Type: INT
-Ambas BDs con la tabla : Banco poseen una columna llamada nombreVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: nombre   Type: VARCHAR
-Ambas BDs con la tabla : Banco poseen una columna llamada cot_maxVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: cot_max   Type: INT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre Banco poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre Banco poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : Banco Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=cod_banco]
-
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre Banco poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=cod_banco, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=cod_banco, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas BDs poseen una tabla con el nombre : AUDITORIA_PRODUCTO
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre AUDITORIA_PRODUCTO poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : AUDITORIA_PRODUCTO poseen una columna llamada FECHAVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: FECHA   Type: DATE
-Ambas BDs con la tabla : AUDITORIA_PRODUCTO poseen una columna llamada ID_AUDITORIA_PRODUCTOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: ID_AUDITORIA_PRODUCTO   Type: INT
-Ambas BDs con la tabla : AUDITORIA_PRODUCTO poseen una columna llamada COD_PRODUCTOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: COD_PRODUCTO   Type: INT
-Ambas BDs con la tabla : AUDITORIA_PRODUCTO poseen una columna llamada USUARIOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: USUARIO   Type: VARCHAR
-Ambas BDs con la tabla : AUDITORIA_PRODUCTO poseen una columna llamada MOVIMIENTOVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: MOVIMIENTO   Type: INT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre AUDITORIA_PRODUCTO poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre AUDITORIA_PRODUCTO poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : AUDITORIA_PRODUCTO Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=ID_AUDITORIA_PRODUCTO]
-
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre AUDITORIA_PRODUCTO poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=ID_AUDITORIA_PRODUCTO, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=ID_AUDITORIA_PRODUCTO, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
-Ambas BDs poseen una tabla con el nombre : Cotizacion
-Veamos si ambas son iguales estructuralmente..
-Ambas tablas con nombre Cotizacion poseen la misma cantidad de columnas 
-Ahora veamos sus columnas 
-Ambas BDs con la tabla : Cotizacion poseen una columna llamada cotizacionVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: cotizacion   Type: INT
-Ambas BDs con la tabla : Cotizacion poseen una columna llamada cod_bancoVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: cod_banco   Type: INT
-Ambas BDs con la tabla : Cotizacion poseen una columna llamada cod_cotizacionVeamos si ambas columnas son iguales estructuralmente.. 
-Ambas son iguales estructuralmente con la siguiente estructura  Columna: cod_cotizacion   Type: INT
-Ahora comparemnos entre los triggers de ambas tablas 
-Ambas tablas con nombre Cotizacion poseen la misma cantidad de triggers 
-Ahora veamos sus triggers 
-Ahora comparemnos entre los indices de ambas tablas 
-Ambas tablas con nombre Cotizacion poseen la misma cantidad de indices 
-Ahora veamos sus indices 
-Ambas BDs con tabla : Cotizacion Poseen un index llamado PRIMARYVeamos si ambos indices son iguales estructuralmente.. 
-Ambos Indices son iguales estructuralmente con la siguiente estructura :
-Index [name=PRIMARY, type=BTREE, column=cod_cotizacion]
-
-Ahora vamos a  comparar entre las Claves de ambas tablas 
-Ambas tablas con nombre Cotizacion poseen la misma cantidad de Claves 
-Ahora veamos sus Claves 
-Ambas Claves son iguales estructuralmente con la siguiente estructura por parte de la key PRIMARY de la BD1 con esta tabla 
-Key [name=PRIMARY, column=cod_cotizacion, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null] 
- Y la clave PRIMARY de la BD2 con la misma tabla 
-Key [name=PRIMARY, column=cod_cotizacion, isPrimary=true, isForeink=false, isUnique=false, referenceTable=null, referenceKey=null]
 Seguimos comparando los procedimientos/funciones de ambas BD (aclaramos que cuando hacemos referecia a los procedimientos tambien incluimos a las funciones)
-Ahora vamos a comparar las Procedimientos de ambas 
-Ambas BDs tienen un procedimiento con el nombre : 
-noValidoVeamos si ambos son iguales estructuralmente..
-Ambos son iguales estructuralmente con la siguiente: 
- Procedure [name=noValido, parameters=[], procedure_return=CHAR]
+ninguna de las BDs posee procedimientos almacenados
+
+
+
+En conclucion podemos decir que las base de datos son DISTINTAS por todo lo mencionado anteriormente 

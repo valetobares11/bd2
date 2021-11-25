@@ -63,17 +63,10 @@ public class Index {
 			result += "Ambos indices son inguales ya que son el mismo indice.\n";
 		if (index == null)
 			result += "El indice con el que se desea comparar esta vacío.\n";
-		Index other = (Index) index;
-		if (column == null) {
-			if (other.column != null)
-				result += this.name + " no posee indices, mientras que "
-				          + other.name + " si posee indices.\n";
-		} else if (!column.equals(other.column))
-			result += "Los valores de los indices no son iguales.\n";
-
-		if (result == "")
-			result += "Los indices " + this.name + " y " + other.name + " son iguales.\n";
-
+		if (column.equals(index.column))
+			result += "Los indices "+this.name+" y "+index.name+" referencian a la misma columna "+column;
+		else
+			result += "Los indices "+this.name+" y "+index.name+" referencian a distintas columnas, "+this.name+" referencia a "+column+" mientras que "+index.name+" referencia a "+index.column;
 		return result;
 	}
 }

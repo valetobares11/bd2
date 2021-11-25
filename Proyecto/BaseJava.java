@@ -128,6 +128,7 @@ public class BaseJava {
 				k.setKeyType(1);
 				column.setName(PK.getString("COLUMN_NAME"));
 				column.setType(table.getColumn(column.getName()).getType());
+				column.setSize(table.getColumn(column.getName()).getSize());
 				k.setColumn(column);
 				k.setKeyName(PK.getString("PK_NAME"));
 				k.setSeqNumber(PK.getInt("KEY_SEQ"));
@@ -141,6 +142,7 @@ public class BaseJava {
 				column = new Column();
 				column.setName(FK.getString("FKCOLUMN_NAME"));
 				column.setType(table.getColumn(column.getName()).getType());
+				column.setSize(table.getColumn(column.getName()).getSize());
 				k.setColumn(column);
 				k.setKeyName(FK.getString("FK_NAME"));
 				// de que tabla y columna es importada
@@ -159,6 +161,7 @@ public class BaseJava {
 						k.setKeyType(3);
 						column.setName(result_key_secundarias_table.getString("COLUMN_NAME"));
 						column.setType(table.getColumn(column.getName()).getType());
+						column.setSize(table.getColumn(column.getName()).getSize());
 						k.setColumn(column);
 						k.setKeyName(result_key_secundarias_table.getString("CONSTRAINT_NAME"));
 						table.addKey(k);

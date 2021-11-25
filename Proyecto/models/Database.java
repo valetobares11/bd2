@@ -65,18 +65,13 @@ public class Database {
 		if (!(obj instanceof Database))
 			return false;
 		Database other = (Database) obj;
-		//EL NOMBRE NO ES CONDICION PARA EVALUAR
-		/*if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name)) {
-			return false;
-		} else {*/
 			if (tables.size() != other.getTables().size()) {
 				return false;
 			} else {
 				for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
 					Table table = (Table) iterator.next();
+					if (other.getTable(table.getName()) == null)
+						return false;
 					if(!other.getTable(table.getName()).equals(table)) {
 						return false;
 					}
@@ -86,6 +81,8 @@ public class Database {
 				} else {
 					for (Iterator iterator = procedures.iterator(); iterator.hasNext();) {
 						Procedure procedure = (Procedure) iterator.next();
+						if (other.getProcedure(procedure.getName()) == null) 
+							return false;
 						if(!other.getProcedure(procedure.getName()).equals(procedure)) {
 							return false;
 						}
@@ -144,6 +141,7 @@ public class Database {
 			    otherTable = other.getTable(table.getName());
 				if(otherTable==null) {
 					result += "La BD1 posee una tabla llamada "+ table.getName() +" Pero esa tabla en la BD2 no existe\n";
+					result += "la estructura de la tabla es "+table.toString()+"\n";
 				} else {
 					if (otherTable.getName().equals(table.getName())) {
 						result += "Las dos BDs tienen una tabla con el nombre : "+ table.getName()+"\n";
@@ -162,6 +160,7 @@ public class Database {
 			    otherTable = this.getTable(table.getName());
 				if(otherTable==null) {
 					result += "La BD2 posee una tabla llamada "+ table.getName() +" Pero esa tabla en la BD1 no existe\n";
+					result += "la estructura de la tabla es "+table.toString()+"\n";
 				} 
 			}
 		}	
