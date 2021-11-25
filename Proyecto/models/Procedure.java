@@ -98,7 +98,15 @@ public class Procedure {
 
 	@Override
 	public String toString() {
-		return "Procedure [name=" + name + ", parameters=" + parameters + ", procedure_return=" + procedure_return+ "]\n";
+		String result = "Procedure [name=" + name + ", parameters=(";
+				 for (Iterator iterator = parameters.iterator(); iterator.hasNext();) {
+					String[] param = (String[]) iterator.next();
+					result+=  param[1]+ " "+ param[0]+ " "+param[2];
+					if (iterator.hasNext())
+						result+= ", ";
+				}
+	result+=")]\n";
+	return result;
 	}
 
 	public String compare(Procedure procedure) {
@@ -109,10 +117,10 @@ public class Procedure {
 				if (parameters.size() != other.getParameters().size()) {
 					if (parameters.size() < other.getParameters().size()) {
 						result += "La cantidad de paramatros es distinta en cada procemiento, "
-								  +"el procedimiento de la bd1 tiene menos parametros que la bd2.\n";
+								  +"el procedimiento de la bd1 tiene menos parametros que la bd2, una tiene "+parameters.size()+" y la otra "+other.getParameters().size()+"\n";
 					}else {
 						result += "La cantidad de paramatros es distinta en cada procemiento, "
-								  +"el procedimiento de la bd2 tiene menos parametros que la bd1.\n";
+								  +"el procedimiento de la bd2 tiene menos parametros que la bd1, una tiene "+parameters.size()+" y la otra "+other.getParameters().size()+"\n";
 					}
 					
 				}else {
@@ -123,7 +131,7 @@ public class Procedure {
 					for (Iterator iterator = parameters.iterator(); iterator.hasNext();) {
 						String[] parameter = (String[]) iterator.next();
 						if (!other.constainsParameter(parameter)) {
-							result += "El parametro "+ parameter[2]+" "+parameter[0]+" de tipo "+parameter[1]+" no pertenese al procedimiento de la bd2, "
+							result += "El parametro "+ parameter[1]+" "+parameter[0]+" de tipo "+parameter[2]+" no pertenese al procedimiento de la bd2, "
 									+ "es decir que no se encontró otro parametro que tenga el mismo perfil \n";
 						}
 					}
@@ -131,7 +139,7 @@ public class Procedure {
 					for (Iterator iterator = other.parameters.iterator(); iterator.hasNext();) {
 						String[] parameter = (String[]) iterator.next();
 						if (!this.constainsParameter(parameter)) {
-							result += "El parametro "+ parameter[2]+" "+parameter[0]+" de tipo "+parameter[1]+"  no pertenese al procedimiento de la bd1"
+							result += "El parametro "+ parameter[1]+" "+parameter[0]+" de tipo "+parameter[2]+"  no pertenese al procedimiento de la bd1"
 									+ "es decir que no se encontró otro parametro que tenga el mismo perfil \n";
 						}
 					}

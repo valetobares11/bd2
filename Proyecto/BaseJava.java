@@ -149,7 +149,8 @@ public class BaseJava {
 			}
 			//PARA EXTRAER LAS CLAVES SECUNDARIAS
 			query = "select CONSTRAINT_NAME,CONSTRAINT_TYPE,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from "
-		+ " information_schema.KEY_COLUMN_USAGE NATURAL JOIN information_schema.table_constraints where table_name = '"+table.getName()+"'";
+		+ " information_schema.KEY_COLUMN_USAGE NATURAL JOIN information_schema.table_constraints"
+		+ " where table_name = '"+table.getName()+"' and table_schema = '"+name_bd+"'";
 			ResultSet result_key_secundarias_table = connection.createStatement().executeQuery(query);
 			 while(result_key_secundarias_table.next()){
 				 if(result_key_secundarias_table.getString("CONSTRAINT_TYPE").equals("UNIQUE")) {

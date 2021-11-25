@@ -233,10 +233,10 @@ public class Table {
 				result += "Las dos tablas poseen distintas cantidad de columnas\n";
 				if(columns.size() > other.getColumns().size()) {
 					result += "La tabla " +this.name+ " de la BD1 tiene mas columnas que la tabla "+ other.getName() +" de la BD2 "
-							 + "Posee "+ columns.size()+ "y la otra "+ other.getIndexs().size()+ "\n"; 
+							 + "Posee "+ columns.size()+ " y la otra "+ other.getIndexs().size()+ "\n"; 
 				} else {
 					result += "La tabla " +this.name+ " de la BD1 tiene menos columnas que la tabla "+ other.getName() +" de la BD2 "
-							+ "Posee "+ other.getColumns().size()+ "y la otra "+ columns.size()+ "\n" ; 
+							+ "Posee "+ other.getColumns().size()+ " y la otra "+ columns.size()+ "\n" ; 
 				}
 			} else {
 				result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de columnas \n";
@@ -295,10 +295,10 @@ public class Table {
 					result += " Las tablas poseen distintas cantidad de triggers \n"; 
 					if(triggers.size() > other.getTriggers().size()) {
 						result += "La tabla " +this.name+ " de la BD1 tiene mas triggers  que la tabla "+ other.getName() +" de la BD2"
-								+ "Posee "+ triggers.size()+ "y la otra "+ other.getTriggers().size() + "\n"; 
+								+ "Posee "+ triggers.size()+ " y la otra "+ other.getTriggers().size() + "\n"; 
 					} else {
 						result += "La tabla " +other.getName()+ " de la BD2 tiene mas triggers  que la tabla "+ name +" de la BD1"
-								+ "Posee "+ other.getTriggers().size()+ "y la otra "+ triggers.size() + "\n"; 
+								+ "Posee "+ other.getTriggers().size()+ " y la otra "+ triggers.size() + "\n"; 
 					}
 				} else {
 					result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de triggers \n";
@@ -359,10 +359,10 @@ public class Table {
 					result += " Las tablas poseen distintas cantidad de indices \n"; 
 					if(indexs.size() > other.getIndexs().size()) {
 						result += "la tabla " +this.name+ " de la BD1 tiene mas indices  que la tabla "+ other.getName() +" de la BD2\n"
-								+ "Posee "+ indexs.size()+ "y la otra "+ other.getIndexs().size() + "\n"; 
+								+ "Posee "+ indexs.size()+ " y la otra "+ other.getIndexs().size() + "\n"; 
 					} else {
 						result += "la tabla " +other.getName()+ " de la BD2 tiene mas indices  que la tabla "+ name +" de la BD1\n"
-								+ "Posee "+ other.getIndexs().size()+ "y la otra "+ indexs.size() + "\n"; 
+								+ "Posee "+ other.getIndexs().size()+ " y la otra "+ indexs.size() + "\n"; 
 					}
 					
 				} else {
@@ -428,10 +428,10 @@ public class Table {
 					result += " Las tablas poseen distintas cantidad de claves primarias \n"; 
 					if(primaryKeys.size() > otherPrimaryKeys.size()) {
 						result += "la tabla " +this.name+ " de la BD1 tiene mas claves primarias que la tabla "+ other.getName() +" de la BD2\n"
-								+ "Posee "+ primaryKeys.size()+ "y la otra "+ otherPrimaryKeys.size()+ "\n"; 
+								+ "Posee "+ primaryKeys.size()+ " y la otra "+ otherPrimaryKeys.size()+ "\n"; 
 					} else {
 						result += "la tabla " +other.getName()+ " de la BD2 tiene mas claves primarias que la tabla "+ name +" de la BD1\n"
-								+ "Posee "+ otherPrimaryKeys.size()+ "y la otra "+ primaryKeys.size() + "\n"; 
+								+ "Posee "+ otherPrimaryKeys.size()+ " y la otra "+ primaryKeys.size() + "\n"; 
 					}
 				} else {
 					result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de Claves primarias \n";
@@ -506,10 +506,10 @@ public class Table {
 					result += " Las tablas poseen distinta cantidad de claves secundarias \n"; 
 					if(uniqueKeys.size() > otherUniqueKeys.size()) {
 						result += "la tabla " +this.name+ " de la BD1 tiene mas claves primarias que la tabla "+ other.getName() +" de la BD2\n"
-								+ "Posee "+ uniqueKeys.size()+ "y la otra "+ otherUniqueKeys.size()+ "\n"; 
+								+ "Posee "+ uniqueKeys.size()+ " y la otra "+ otherUniqueKeys.size()+ "\n"; 
 					} else {
 						result += "la tabla " +other.getName()+ " de la BD2 tiene mas claves primarias que la tabla "+ name +" de la BD1\n"
-								+ "Posee "+ otherUniqueKeys.size()+ "y la otra "+ uniqueKeys.size() + "\n"; 
+								+ "Posee "+ otherUniqueKeys.size()+ " y la otra "+ uniqueKeys.size() + "\n"; 
 					}
 				} else {
 					result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de Claves secundarias \n";
@@ -573,10 +573,10 @@ public class Table {
 					result += " Las tablas poseen distinta cantidad de claves foraneas \n"; 
 					if(foreignKeys.size() > otherForeignKeys.size()) {
 						result += "la tabla " +this.name+ " de la BD1 tiene mas claves foraneas que la tabla "+ other.getName() +" de la BD2\n"
-								+ "Posee "+ foreignKeys.size()+ "y la otra "+ otherForeignKeys.size()+ "\n"; 
+								+ "Posee "+ foreignKeys.size()+ " y la otra "+ otherForeignKeys.size()+ "\n"; 
 					} else {
 						result += "la tabla " +other.getName()+ " de la BD2 tiene mas claves foraneas que la tabla "+ name +" de la BD1\n"
-								+ "Posee "+ otherForeignKeys.size()+ "y la otra "+ foreignKeys.size() + "\n"; 
+								+ "Posee "+ otherForeignKeys.size()+ " y la otra "+ foreignKeys.size() + "\n"; 
 					}
 				} else {
 					result += "Ambas tablas con nombre " + this.name +" poseen la misma cantidad de Claves foraneas \n";	

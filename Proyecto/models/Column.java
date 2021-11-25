@@ -61,7 +61,7 @@ public class Column {
 
 	@Override
 	public String toString() {
-		String r = "  Columna: " + name+ "   Type: "+  type;
+		String r = 	(type.equals("VARCHAR"))?	" Columna: " + name+ "   Type: "+  type+ "   Size: "+ size :"  Columna: " + name+ "   Type: "+  type ;
 		
 		return r;
 	}
